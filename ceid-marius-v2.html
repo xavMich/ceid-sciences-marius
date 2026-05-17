@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CE1D Sciences 2025 — Marius</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #21262d;
+  --border: #30363d;
+  --green: #39d353;
+  --green-dim: #1a7f37;
+  --green-pale: #0d2818;
+  --amber: #f0b429;
+  --amber-pale: #2d1f00;
+  --red: #f85149;
+  --red-pale: #2d0f0e;
+  --blue: #58a6ff;
+  --blue-pale: #0d1f38;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-dim: #484f58;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── SCREEN SYSTEM ─── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+
+/* ─── WELCOME SCREEN ─── */
+#screen-welcome {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px; text-align: center;
+  background: radial-gradient(ellipse at 50% 0%, #0d2818 0%, #0d1117 60%);
+}
+.welcome-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--green); background: var(--green-pale);
+  border: 1px solid var(--green-dim); border-radius: 20px;
+  padding: 5px 14px; margin-bottom: 28px;
+}
+.welcome-title {
+  font-size: clamp(28px, 7vw, 48px); font-weight: 800; line-height: 1.15;
+  margin-bottom: 12px;
+}
+.welcome-title .accent { color: var(--green); }
+.welcome-sub {
+  font-size: 16px; color: var(--text-muted); max-width: 340px;
+  margin: 0 auto 36px;
+}
+.score-ring-wrap { margin: 0 auto 32px; position: relative; width: 160px; height: 160px; }
+.score-ring-wrap svg { transform: rotate(-90deg); }
+.score-ring-bg { fill: none; stroke: var(--surface2); stroke-width: 12; }
+.score-ring-fill { fill: none; stroke: var(--green); stroke-width: 12; stroke-linecap: round; transition: stroke-dasharray 0.8s ease; }
+.score-ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-ring-num { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: var(--green); line-height: 1; }
+.score-ring-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.welcome-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 100%; max-width: 380px; margin: 0 auto 32px; }
+.welcome-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 10px; }
+.welcome-stat-num { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--text); }
+.welcome-stat-label { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: #0d1117; border: none;
+  border-radius: var(--radius-sm); padding: 14px 28px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px;
+  cursor: pointer; transition: all 0.15s; width: 100%; max-width: 300px; justify-content: center;
+}
+.btn-primary:hover { background: #2ea043; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+.history-label { font-size: 12px; color: var(--text-dim); margin-top: 16px; font-family: 'Space Mono', monospace; }
+
+/* ─── QUESTION LIST SCREEN ─── */
+#screen-list { background: var(--bg); }
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,17,23,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px; display: flex; align-items: center; gap: 12px;
+}
+.topbar-back {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); width: 36px; height: 36px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; font-size: 16px; flex-shrink: 0;
+}
+.topbar-title { font-weight: 700; font-size: 15px; flex: 1; }
+.topbar-score {
+  font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700;
+  color: var(--green); background: var(--green-pale); border: 1px solid var(--green-dim);
+  border-radius: 20px; padding: 4px 12px; white-space: nowrap; cursor: pointer;
+}
+.list-header { padding: 20px 16px 12px; }
+.list-header h2 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.list-header p { font-size: 13px; color: var(--text-muted); }
+.progress-bar { height: 4px; background: var(--surface2); border-radius: 4px; margin: 12px 16px 0; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s ease; width: 0%; }
+
+.section-header {
+  padding: 20px 16px 8px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-tag {
+  font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 3px 8px; color: var(--text-muted);
+}
+.section-pts { font-size: 12px; color: var(--text-dim); }
+
+.q-item {
+  margin: 4px 12px; border-radius: var(--radius);
+  background: var(--surface); border: 1px solid var(--border);
+  cursor: pointer; transition: all 0.15s; overflow: hidden;
+  display: flex; align-items: center; gap: 0;
+}
+.q-item:active { transform: scale(0.99); }
+.q-item-left { padding: 14px 16px; flex: 1; }
+.q-item-num {
+  font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
+}
+.q-item-title { font-weight: 600; font-size: 14px; line-height: 1.3; }
+.q-item-pts { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+.q-item-right {
+  padding: 14px 14px 14px 0; display: flex; flex-direction: column;
+  align-items: center; gap: 4px; flex-shrink: 0;
+}
+.q-status-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; border: 2px solid var(--border); background: var(--surface2);
+  color: var(--text-dim); transition: all 0.2s;
+}
+.q-status-dot.done-ok { background: var(--green-pale); border-color: var(--green); color: var(--green); }
+.q-status-dot.done-bad { background: var(--red-pale); border-color: var(--red); color: var(--red); }
+.q-status-dot.done-partial { background: var(--amber-pale); border-color: var(--amber); color: var(--amber); }
+.q-item-score { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; }
+.q-item.answered-ok { border-color: #1a7f3750; }
+.q-item.answered-bad { border-color: #f8514950; }
+
+/* ─── QUESTION SCREEN ─── */
+#screen-question { background: var(--bg); }
+.q-topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(13,17,23,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
+}
+.q-topbar-back {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); width: 36px; height: 36px; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0;
+}
+.q-topbar-info { flex: 1; }
+.q-topbar-num { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+.q-topbar-title { font-weight: 700; font-size: 14px; line-height: 1.2; }
+.q-topbar-pts {
+  font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); white-space: nowrap; flex-shrink: 0;
+}
+.q-content { padding: 20px 16px; max-width: 600px; margin: 0 auto; }
+
+/* Context box */
+.ctx-box {
+  background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--blue);
+  border-radius: var(--radius); padding: 14px 16px; margin-bottom: 20px; font-size: 14px;
+}
+.ctx-label { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; }
+
+/* Sub-question */
+.sub-q { margin-bottom: 20px; }
+.sub-q-label {
+  font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700;
+  color: var(--amber); text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.sub-q-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
+.sub-q-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; font-style: italic; }
+
+/* Options */
+.opt-list { display: flex; flex-direction: column; gap: 7px; }
+.opt {
+  display: flex; align-items: flex-start; gap: 10px;
+  background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 11px 14px; cursor: pointer; transition: all 0.12s;
+  font-size: 14px; line-height: 1.4; -webkit-tap-highlight-color: transparent;
+}
+.opt:active { transform: scale(0.99); }
+.opt:hover { border-color: var(--blue); }
+.opt.selected { background: var(--blue-pale); border-color: var(--blue); }
+.opt input { accent-color: var(--green); margin-top: 2px; flex-shrink: 0; }
+.opt.reveal-ok { background: var(--green-pale) !important; border-color: var(--green) !important; }
+.opt.reveal-bad { background: var(--red-pale) !important; border-color: var(--red) !important; }
+.opt.reveal-missed { background: var(--amber-pale) !important; border-color: var(--amber) !important; }
+
+/* Checkbox opts */
+.opt.cb-selected { background: var(--blue-pale); border-color: var(--blue); }
+
+/* Text input */
+.txt-input {
+  width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); padding: 11px 14px; color: var(--text);
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; resize: vertical;
+  min-height: 52px; transition: border-color 0.15s; outline: none;
+}
+.txt-input:focus { border-color: var(--blue); }
+.txt-input.has-val { border-color: var(--text-dim); }
+.txt-input::placeholder { color: var(--text-dim); }
+
+/* Table */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+.data-table th { background: var(--surface2); color: var(--text-muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 10px; border: 1px solid var(--border); text-align: left; }
+.data-table td { padding: 7px 10px; border: 1px solid var(--border); vertical-align: middle; }
+.data-table td input[type=text] { background: transparent; border: none; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; width: 100%; outline: none; }
+.data-table td input[type=text]:focus { border-bottom: 1px solid var(--blue); }
+
+/* TF rows */
+.tf-list { display: flex; flex-direction: column; gap: 8px; }
+.tf-row {
+  background: var(--surface2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px 14px; display: flex; align-items: flex-start; gap: 12px;
+}
+.tf-text { flex: 1; font-size: 14px; line-height: 1.45; }
+.tf-btns { display: flex; gap: 6px; flex-shrink: 0; margin-top: 2px; }
+.tf-btn {
+  padding: 5px 11px; border-radius: 6px; font-weight: 700; font-size: 12px;
+  border: 1.5px solid var(--border); background: var(--surface); color: var(--text-muted);
+  cursor: pointer; transition: all 0.12s; font-family: 'Space Mono', monospace;
+}
+.tf-btn.sel-v { background: var(--green-pale); border-color: var(--green); color: var(--green); }
+.tf-btn.sel-f { background: var(--red-pale); border-color: var(--red); color: var(--red); }
+.tf-btn.reveal-ok { background: var(--green-pale) !important; border-color: var(--green) !important; color: var(--green) !important; }
+.tf-btn.reveal-bad { background: var(--red-pale) !important; border-color: var(--red) !important; color: var(--red) !important; }
+
+/* Draw notice */
+.draw-box {
+  background: var(--amber-pale); border: 1.5px solid var(--amber);
+  border-radius: var(--radius-sm); padding: 12px 14px; margin: 8px 0;
+  font-size: 13px; color: #f0b42999; display: flex; gap: 10px;
+}
+.draw-icon { font-size: 18px; flex-shrink: 0; }
+.draw-txt { color: var(--text-muted); }
+.draw-txt strong { color: var(--amber); }
+
+/* Verify btn */
+.btn-verify {
+  width: 100%; padding: 14px; border-radius: var(--radius-sm);
+  background: var(--green); color: #0d1117; border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px;
+  cursor: pointer; margin-top: 20px; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-verify:hover { background: #2ea043; }
+.btn-verify:active { transform: scale(0.98); }
+.btn-verify:disabled { background: var(--surface2); color: var(--text-dim); cursor: not-allowed; }
+
+.btn-next {
+  width: 100%; padding: 14px; border-radius: var(--radius-sm);
+  background: var(--surface2); color: var(--text); border: 1.5px solid var(--border);
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px;
+  cursor: pointer; margin-top: 10px; transition: all 0.15s;
+  display: none; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-next.show { display: flex; }
+.btn-next:hover { border-color: var(--text-muted); }
+
+/* ─── FEEDBACK PANEL ─── */
+.feedback-panel {
+  display: none; margin-top: 20px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.feedback-panel.show { display: block; }
+.feedback-header {
+  padding: 14px 16px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.feedback-emoji { font-size: 22px; }
+.feedback-title-text { font-weight: 700; font-size: 16px; flex: 1; }
+.feedback-pts {
+  font-family: 'Space Mono', monospace; font-weight: 700; font-size: 15px;
+  padding: 4px 10px; border-radius: 6px;
+}
+.feedback-pts.ok { color: var(--green); background: var(--green-pale); }
+.feedback-pts.partial { color: var(--amber); background: var(--amber-pale); }
+.feedback-pts.bad { color: var(--red); background: var(--red-pale); }
+.feedback-body { padding: 14px 16px; }
+
+.fb-item {
+  display: flex; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.5;
+}
+.fb-item:last-child { border-bottom: none; }
+.fb-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.fb-text { flex: 1; }
+.fb-text strong { color: var(--text); }
+.fb-text code { font-family: 'Space Mono', monospace; font-size: 12px; background: var(--surface2); border-radius: 4px; padding: 1px 5px; color: var(--amber); }
+
+.lesson-box {
+  background: var(--blue-pale); border: 1px solid #1f3a5f;
+  border-radius: var(--radius-sm); padding: 12px 14px; margin-top: 12px;
+  font-size: 13px; color: var(--text-muted);
+}
+.lesson-box strong { color: var(--blue); }
+.lesson-title { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; }
+
+/* ─── RESULTS SCREEN ─── */
+#screen-results { background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 40px 20px; min-height: 100vh; }
+.results-title { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 8px; }
+.results-sub { color: var(--text-muted); font-size: 14px; text-align: center; margin-bottom: 32px; }
+.results-ring-wrap { position: relative; width: 180px; height: 180px; margin: 0 auto 28px; }
+.results-ring-wrap svg { transform: rotate(-90deg); }
+.results-ring-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; }
+.results-big { font-size: 40px; font-weight: 700; line-height: 1; }
+.results-max { font-size: 16px; color: var(--text-muted); }
+.results-pct { font-size: 14px; font-weight: 600; margin-top: 4px; }
+.results-msg { font-size: 15px; text-align: center; max-width: 320px; margin: 0 auto 24px; }
+.results-breakdown { width: 100%; max-width: 420px; }
+.rb-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.rb-row:last-child { border-bottom: none; }
+.rb-name { flex: 1; }
+.rb-score { font-family: 'Space Mono', monospace; font-weight: 700; }
+.btn-retry { margin-top: 28px; background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 13px 28px; color: var(--text); font-weight: 700; font-size: 14px; cursor: pointer; width: 100%; max-width: 300px; }
+.btn-retry:hover { border-color: var(--text-muted); }
+
+/* ─── CHAIN INPUT ─── */
+.chain-wrap { display: flex; flex-direction: column; gap: 8px; }
+.chain-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chain-input { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; flex: 1; min-width: 90px; outline: none; }
+.chain-input:focus { border-color: var(--blue); }
+.chain-arrow { color: var(--green); font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 380px) {
+  .welcome-grid { grid-template-columns: 1fr 1fr; }
+  body { font-size: 14px; }
+  .opt { padding: 9px 12px; font-size: 13px; }
+  .tf-row { flex-direction: column; }
+  .tf-btns { margin-top: 6px; }
+}
+
+/* ─── ANIMATIONS ─── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.feedback-panel.show { animation: slideUp 0.25s ease; }
+.q-content { animation: slideUp 0.2s ease; }
+
+/* ─── DIVIDER ─── */
+.livret-div {
+  margin: 8px 12px 4px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.livret-div-icon { font-size: 20px; }
+.livret-div-text h3 { font-weight: 700; font-size: 14px; }
+.livret-div-text p { font-size: 12px; color: var(--text-muted); }
+
+.divider-line { height: 1px; background: var(--border); margin: 0 12px 4px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ -->
+<!--            SCREEN: WELCOME                -->
+<!-- ══════════════════════════════════════════ -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-badge">CE1D Sciences 2025 · Révisions</div>
+  <h1 class="welcome-title">Salut <span class="accent">Marius</span> 👋<br>Tu vas le péter ce CE1D !</h1>
+  <p class="welcome-sub">14 questions officielles · Correction complète · Apprends de tes erreurs · Recommence autant de fois que tu veux</p>
+
+  <div class="score-ring-wrap">
+    <svg viewBox="0 0 160 160" width="160" height="160">
+      <circle class="score-ring-bg" cx="80" cy="80" r="64"/>
+      <circle class="score-ring-fill" id="welcomeRing" cx="80" cy="80" r="64" stroke-dasharray="0 402" stroke-dashoffset="0"/>
+    </svg>
+    <div class="score-ring-text">
+      <div class="score-ring-num" id="welcomeScore">0</div>
+      <div class="score-ring-label">/ 92 pts</div>
+    </div>
+  </div>
+
+  <div class="welcome-grid">
+    <div class="welcome-stat">
+      <div class="welcome-stat-num" id="wStatDone">0/14</div>
+      <div class="welcome-stat-label">Questions</div>
+    </div>
+    <div class="welcome-stat">
+      <div class="welcome-stat-num" id="wStatPct">0%</div>
+      <div class="welcome-stat-label">Réussite</div>
+    </div>
+    <div class="welcome-stat">
+      <div class="welcome-stat-num" id="wStatTries">0</div>
+      <div class="welcome-stat-label">Tentatives</div>
+    </div>
+  </div>
+
+  <button class="btn-primary" onclick="goToList()">
+    <span>Commencer l'exam</span> <span>→</span>
+  </button>
+  <div class="history-label" id="historyLabel"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--            SCREEN: LIST                   -->
+<!-- ══════════════════════════════════════════ -->
+<div id="screen-list" class="screen">
+  <div class="topbar">
+    <div class="topbar-back" onclick="goTo('welcome')">←</div>
+    <div class="topbar-title">CE1D Sciences 2025</div>
+    <div class="topbar-score" onclick="goToResults()" id="topScore">0 / 92</div>
+  </div>
+  <div class="list-header">
+    <h2>Toutes les questions</h2>
+    <p id="listSubtitle">Sélectionne une question pour commencer</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="listProgress"></div></div>
+
+  <div id="questionList"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--            SCREEN: QUESTION               -->
+<!-- ══════════════════════════════════════════ -->
+<div id="screen-question" class="screen">
+  <div class="q-topbar">
+    <div class="q-topbar-back" onclick="goToList()">←</div>
+    <div class="q-topbar-info">
+      <div class="q-topbar-num" id="qTopNum"></div>
+      <div class="q-topbar-title" id="qTopTitle"></div>
+    </div>
+    <div class="q-topbar-pts" id="qTopPts"></div>
+  </div>
+  <div class="q-content" id="qContent"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--            SCREEN: RESULTS                -->
+<!-- ══════════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="results-emoji" style="font-size:48px;margin-bottom:12px;" id="resEmoji">🎯</div>
+  <h2 class="results-title" id="resTitle">Résultats</h2>
+  <p class="results-sub" id="resSub">Voilà ton score final</p>
+
+  <div class="results-ring-wrap">
+    <svg viewBox="0 0 180 180" width="180" height="180">
+      <circle fill="none" stroke="#21262d" stroke-width="14" cx="90" cy="90" r="72"/>
+      <circle fill="none" stroke="#39d353" stroke-width="14" stroke-linecap="round" cx="90" cy="90" r="72" id="resRingFill" stroke-dasharray="0 452" stroke-dashoffset="0"/>
+    </svg>
+    <div class="results-ring-num">
+      <div class="results-big" id="resScore">0</div>
+      <div class="results-max">/92</div>
+      <div class="results-pct" id="resPct" style="color:var(--green)">0%</div>
+    </div>
+  </div>
+
+  <p class="results-msg" id="resMsg"></p>
+
+  <div class="results-breakdown" id="resBreakdown"></div>
+
+  <button class="btn-retry" onclick="resetAndRestart()">🔄 Recommencer l'examen</button>
+  <button class="btn-retry" onclick="goToList()" style="margin-top:8px; color:var(--text-muted)">← Retour aux questions</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  DATA — Questions + Corrigé officiel complet
+// ═══════════════════════════════════════════════════════════
+
+const QUESTIONS = [
+  {
+    id: 'q1', num: 'Q1', title: 'Tour solaire — Chaîne énergétique', pts: 5, livret: 1,
+    items: ['1'],
+    context: "Une tour solaire transforme l'énergie du soleil en électricité. Des miroirs réfléchissent la lumière vers un récepteur solaire qui chauffe de l'eau. La vapeur fait tourner une turbine, qui entraîne un alternateur connecté au réseau électrique.",
+    subqs: [
+      {
+        id: '1', label: '1 pt par ligne correcte', type: 'table-fill',
+        instruction: 'COMPLÈTE le tableau (formes d\'énergie manquantes et récepteur manquant) :',
+        rows: [
+          { emetteur: 'Soleil', energie: null, recepteur: 'Miroirs', answer: 'lumineuse', field: 'q1r1' },
+          { emetteur: 'Miroirs', energie: 'lumineuse', recepteur: null, answer: 'Récepteur solaire', field: 'q1r2' },
+          { emetteur: 'Récepteur solaire', energie: null, recepteur: 'Eau', answer: 'thermique', field: 'q1r3' },
+          { emetteur: 'Turbine', energie: null, recepteur: 'Alternateur', answer: 'mécanique', field: 'q1r4' },
+          { emetteur: 'Alternateur', energie: null, recepteur: 'Réseau', answer: 'électrique', field: 'q1r5' },
+        ],
+        lesson: '🔋 Retiens la chaîne : solaire (☀️) → lumineuse → thermique → mécanique → électrique. Chaque terme est précis et NON remplaçable selon le corrigé officiel.',
+        check: (state) => {
+          const vals = ['q1r1','q1r2','q1r3','q1r4','q1r5'].map(k => n(state[k]||''));
+          const exp = [['lumineuse'],['recepteur solaire','récepteur solaire'],['thermique','chaleur','calorifique'],['mecanique','cinétique'],['electrique']];
+          let pts=0, fb=[];
+          const labels = ['Soleil → Miroirs : énergie ?','Miroirs → ??? récepteur','Récepteur solaire → Eau : énergie ?','Turbine → Alternateur : énergie ?','Alternateur → Réseau : énergie ?'];
+          const correct = ['lumineuse','Récepteur solaire','thermique','mécanique','électrique'];
+          exp.forEach((e,i)=>{
+            if(e.some(x=>vals[i].includes(x))){ pts++; fb.push({ok:true, txt:`<strong>${labels[i]}</strong> : ✅ Correct !`}); }
+            else { fb.push({ok:false, txt:`<strong>${labels[i]}</strong> → réponse attendue : <code>${correct[i]}</code> — tu as mis : <code>${vals[i]||'rien'}</code>`}); }
+          });
+          return { pts, max:5, fb };
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q2', num: 'Q2', title: 'William et la poire — Les forces', pts: 10, livret: 1,
+    items: ['2a','2b','2c'],
+    context: "William tient une poire dans sa main. Une force F⃗W/P est représentée (c'est la force exercée par la main de William sur la poire, dirigée vers le haut). L'échelle est : 1 cm = 20 N.",
+    subqs: [
+      {
+        id: '2a', label: '/5 pts — à faire sur papier', type: 'draw',
+        instruction: 'REPRÉSENTE et NOMME la 2ème force (F⃗P/W)',
+        drawGuide: [
+          '📍 Le vecteur F⃗P/W part du point W (même point d\'application)',
+          '↔️ Même droite d\'action (même direction) que F⃗W/P',
+          '🔃 Sens OPPOSÉ à F⃗W/P (donc vers le bas)',
+          '📏 Longueur identique à F⃗W/P (entre 0,9 et 1,1 cm)',
+          '🏷️ Écris le symbole F⃗P/W à côté de ta flèche',
+        ],
+        lesson: '⚖️ 3ème loi de Newton : toute force a une réaction égale et opposée. La poire attire la main autant que la main tient la poire. P/W = "Poire sur William".',
+        check: () => ({ pts:5, max:5, manual:true, fb:[{ok:'manual', txt:'Ce sous-item est évalué manuellement sur papier. Vérifie les 5 critères ci-dessus. Accorde-toi le point pour chaque critère respecté.'}] })
+      },
+      {
+        id: '2b', label: '/2 pts', type: 'multi-text',
+        instruction: 'NOMME les deux objets qui interagissent :',
+        fields: [
+          { id:'q2b1', placeholder:'Objet 1...', label:'Objet 1', answers:['main','doigt','william','w'], correct:'La main de William (ou : William, doigts, main de W)' },
+          { id:'q2b2', placeholder:'Objet 2...', label:'Objet 2', answers:['poire','fruit','p'], correct:'La poire (ou : le fruit, P)' }
+        ],
+        lesson: '💡 Les deux objets en interaction sont ceux dans le symbole : F⃗ W→P = la main (W) et la poire (P).',
+        check: (state) => {
+          let pts=0, fb=[];
+          const f = [{id:'q2b1',answers:['main','doigt','william','w'],lbl:'Objet 1 (la main de William)'},{id:'q2b2',answers:['poire','fruit','p'],lbl:'Objet 2 (la poire)'}];
+          f.forEach(x=>{
+            const v=n(state[x.id]||'');
+            if(x.answers.some(a=>v.includes(a))){ pts++; fb.push({ok:true,txt:`✅ <strong>${x.lbl}</strong> : correct !`}); }
+            else { fb.push({ok:false,txt:`❌ <strong>${x.lbl}</strong> : tu as mis "<code>${state[x.id]||'vide'}</code>" — attendu : la main de William / la poire`}); }
+          });
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '2c', label: '/3 pts', type: 'sentence-fill',
+        instruction: 'ÉCRIS la signification de F⃗W/P en phrase complète :',
+        hint: 'Formule : "C\'est _____ exercée par _____ sur _____."',
+        field: 'q2c',
+        placeholder: 'C\'est la force exercée par... sur...',
+        lesson: '📝 Formule à retenir : "C\'est <strong>la force</strong> exercée par <strong>la main de William</strong> sur <strong>la poire</strong>." — chaque espace vaut 1 point, mais pas de symboles seuls (F, P, W).',
+        check: (state) => {
+          const v=n(state['q2c']||'');
+          const hasForce=v.includes('force')||v.includes('vecteur');
+          const hasWilliam=v.includes('main')||v.includes('william')||v.includes('doigt')||v.includes('w');
+          const hasPoire=v.includes('poire')||v.includes('fruit')||v.includes('objet p');
+          let pts=0,fb=[];
+          if(hasForce){pts++;fb.push({ok:true,txt:'✅ "la force" mentionnée'});}
+          else{fb.push({ok:false,txt:'❌ Manque "la force" (ou "le vecteur de la force")'});}
+          if(hasWilliam){pts++;fb.push({ok:true,txt:'✅ "la main de William" mentionnée'});}
+          else{fb.push({ok:false,txt:'❌ Manque "exercée par la main de William"'});}
+          if(hasPoire){pts++;fb.push({ok:true,txt:'✅ "la poire" mentionnée'});}
+          else{fb.push({ok:false,txt:'❌ Manque "sur la poire"'});}
+          return {pts,max:3,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q3', num: 'Q3', title: 'Classification des 6 animaux', pts: 10, livret: 1,
+    items: ['3a','3b','3c','3d','3e','3f','3g','3h'],
+    context: "6 animaux : Coquille Saint-Jacques (mer, bonds), Tarsier (arbres, ouïe pour chasser), Poisson-globe (mer, se gonfle), Libellule (air, vue pour chasser), Taupe (souterrain, ouïe pour chasser), Poisson-crapaud (mer, camouflage).",
+    subqs: [
+      {
+        id: '3a', label: '/1 pt', type: 'radio',
+        instruction: 'Critère 1 : Milieu de vie. Caractéristique 1 (côté OUI) :',
+        field: 'q3a',
+        options: [
+          {val:'a', txt:'Le milieu terrestre / l\'air'},
+          {val:'b', txt:'L\'eau / le milieu aquatique / le milieu marin ✓'},
+          {val:'c', txt:'Le milieu souterrain'},
+        ],
+        correct: 'b',
+        lesson: '🌊 Les animaux aquatiques (OUI) : Coquille Saint-Jacques, Poisson-globe, Poisson-crapaud. Les autres (NON) : Tarsier, Libellule, Taupe.',
+        check: (state)=>{ const ok=state.q3a==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : le milieu aquatique / marin':'❌ Réponse : <strong>L\'eau / milieu aquatique / milieu marin</strong>. Les animaux aquatiques sont : Coquille Saint-Jacques, Poisson-globe, Poisson-crapaud.'}]}; }
+      },
+      {
+        id: '3b', label: '/1 pt', type: 'radio',
+        instruction: 'Dans le groupe aquatique (OUI), critère 2 : mode de défense. Côté OUI = "s\'échappe par bonds". Quel animal correspond ?',
+        field: 'q3b',
+        options: [
+          {val:'a', txt:'Poisson-globe'},
+          {val:'b', txt:'Coquille Saint-Jacques ✓'},
+          {val:'c', txt:'Poisson-crapaud'},
+        ],
+        correct: 'b',
+        lesson: '🦪 La Coquille Saint-Jacques "s\'échappe par bonds pour fuir le danger" — c\'est son mode de défense unique. Le poisson-globe se gonfle, le poisson-crapaud se camoufle.',
+        check: (state)=>{ const ok=state.q3b==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Coquille Saint-Jacques':'❌ Réponse : <strong>Coquille Saint-Jacques</strong> — elle s\'échappe en faisant des bonds.'}]}; }
+      },
+      {
+        id: '3c', label: '/1 pt', type: 'radio',
+        instruction: 'Dans le groupe aquatique / bonds NON. Quel est la répartition correcte ? (2 animaux restants)',
+        field: 'q3c',
+        options: [
+          {val:'a', txt:'Poisson-globe seul d\'un côté'},
+          {val:'b', txt:'Poisson-crapaud seul d\'un côté'},
+          {val:'c', txt:'Poisson-globe + Poisson-crapaud des deux côtés ✓'},
+        ],
+        correct: 'c',
+        lesson: '🐡 Poisson-globe (gonflement) et Poisson-crapaud (camouflage) sont les deux dans la branche NON-bonds. Chacun dans une case différente selon un 3ème critère.',
+        check: (state)=>{ const ok=state.q3c==='c'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct !':'❌ Réponse : <strong>Poisson-globe ET Poisson-crapaud</strong> sont bien répartis dans la branche "bonds NON" — un de chaque côté.'}]}; }
+      },
+      {
+        id: '3d', label: '/1 pt', type: 'radio',
+        instruction: 'Critère 3 (pour les animaux NON aquatiques) : sens principal utilisé. Côté OUI =',
+        field: 'q3d',
+        options: [
+          {val:'a', txt:'L\'odorat'},
+          {val:'b', txt:'La vue ✓'},
+          {val:'c', txt:'Le toucher'},
+        ],
+        correct: 'b',
+        lesson: '👁️ La vue est utilisée par la Libellule. L\'ouïe est aussi acceptée en côté OUI, avec inversion de 3g et 3h. Mais la vue est la réponse principale attendue.',
+        check: (state)=>{ const ok=state.q3d==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : La vue':'❌ Réponse : <strong>La vue</strong> (utilisée par la Libellule). Attention : l\'ouïe est aussi acceptée avec inversion des cases 3g et 3h.'}]}; }
+      },
+      {
+        id: '3e', label: '/1 pt', type: 'radio',
+        instruction: 'Case 3e — Aquatique / Bonds NON / côté GAUCHE (camouflage) :',
+        field: 'q3e',
+        options: [
+          {val:'a', txt:'Poisson-globe'},
+          {val:'b', txt:'Poisson-crapaud ✓'},
+        ],
+        correct: 'b',
+        lesson: '🐟 Le Poisson-crapaud "prend la couleur de son milieu de vie" = camouflage. Il va dans la case qui représente ce mode de défense.',
+        check: (state)=>{ const ok=state.q3e==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Poisson-crapaud (camouflage)':'❌ Réponse : <strong>Poisson-crapaud</strong> (il se camoufle = prend la couleur du milieu).'}]}; }
+      },
+      {
+        id: '3f', label: '/2 pts', type: 'radio',
+        instruction: 'Case 3f — Aquatique / Bonds NON / côté DROIT (gonflement) — 2 animaux attendus ou 1 seul ?',
+        field: 'q3f',
+        options: [
+          {val:'a', txt:'Poisson-globe seul ✓ (1 animal = 2 pts si correct)'},
+          {val:'b', txt:'Poisson-crapaud seul'},
+          {val:'c', txt:'Les deux ensemble'},
+        ],
+        correct: 'a',
+        lesson: '🐡 Le Poisson-globe (se gonfle d\'eau) est le seul dans cette case. Vaut 2 points car case importante de l\'organigramme.',
+        check: (state)=>{ const ok=state.q3f==='a'; return {pts:ok?2:0,max:2,fb:[{ok,txt:ok?'✅ Correct : Poisson-globe seul (2 pts)':'❌ Réponse : <strong>Poisson-globe</strong> seul — il se gonfle d\'eau quand il est menacé.'}]}; }
+      },
+      {
+        id: '3g', label: '/1 pt', type: 'radio',
+        instruction: 'Case 3g — NON aquatique / Vue OUI :',
+        field: 'q3g',
+        options: [
+          {val:'a', txt:'Tarsier'},
+          {val:'b', txt:'Libellule ✓'},
+          {val:'c', txt:'Taupe'},
+        ],
+        correct: 'b',
+        lesson: '🦋 La Libellule "possède des yeux qui lui permettent d\'avoir une vue d\'ensemble" → vue = OUI.',
+        check: (state)=>{ const ok=state.q3g==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Libellule (vue)':'❌ Réponse : <strong>Libellule</strong> — elle repère ses proies grâce à sa vue.'}]}; }
+      },
+      {
+        id: '3h', label: '/2 pts', type: 'checkbox',
+        instruction: 'Case 3h — NON aquatique / Vue NON (= ouïe). Quels animaux ? (2 pts = 1 pt par animal)',
+        field: 'q3h',
+        options: [
+          {val:'a', txt:'Libellule'},
+          {val:'b', txt:'Tarsier ✓'},
+          {val:'c', txt:'Taupe ✓'},
+        ],
+        correct: ['b','c'],
+        lesson: '👂 Tarsier (localise ses proies par les sons) ET Taupe (détecte les vers à l\'ouïe) = tous deux utilisent l\'ouïe comme sens principal.',
+        check: (state)=>{
+          const sel=state.q3h||[];
+          const tarsierOk=sel.includes('b'), taupeOk=sel.includes('c');
+          let pts=0,fb=[];
+          if(tarsierOk){pts++;fb.push({ok:true,txt:'✅ Tarsier : correct (localise ses proies aux sons)'});}
+          else{fb.push({ok:false,txt:'❌ Manque le <strong>Tarsier</strong> — il localise ses proies grâce aux sons qu\'elles émettent.'});}
+          if(taupeOk){pts++;fb.push({ok:true,txt:'✅ Taupe : correct (détecte les vers à l\'ouïe)'});}
+          else{fb.push({ok:false,txt:'❌ Manque la <strong>Taupe</strong> — elle détecte les vers de terre et escargots grâce à son ouïe.'});}
+          if(sel.includes('a')){pts=Math.max(0,pts-1);fb.push({ok:false,txt:'❌ Libellule = mauvaise case (elle utilise la VUE, pas l\'ouïe)'});}
+          return {pts,max:2,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q4', num: 'Q4', title: 'Pyrale du maïs & Trichogramme', pts: 4, livret: 1,
+    items: ['4a','4b'],
+    context: "La pyrale du maïs est un papillon nuisible. Le trichogramme est une guêpe minuscule qui interrompt le cycle de la pyrale. Les agriculteurs lâchent des trichogrammes dans leurs cultures pour les protéger.",
+    subqs: [
+      {
+        id: '4a', label: '/3 pts', type: 'open-keywords',
+        instruction: 'EXPLIQUE comment les trichogrammes protègent les cultures (3 étapes minimum) :',
+        field: 'q4a',
+        placeholder: 'Étape 1 : Les trichogrammes...\nÉtape 2 : ...\nÉtape 3 : ...',
+        keywords: [
+          { pts:1, words:['pond','oeuf','ponte','pondent','oeuf de pyrale','oeuf du papillon'], label:'Étape 2 : les trichogrammes pondent dans les œufs de pyrale', example:'Elles pondent des œufs dans les œufs de pyrale.' },
+          { pts:1, words:['devore','mange','larve','contenu'], label:'Étape 3 : les larves de trichogramme dévorent le contenu de l\'œuf', example:'Les larves dévorent les larves de pyrale.' },
+          { pts:1, words:['moins','chenille','cycle','interrompé','développe','naissanc'], label:'Étape 4 : moins de chenilles de pyrale se développent', example:'Il y aura de moins en moins de pyrales.' },
+        ],
+        lesson: '🐛 Séquence : Trichogrammes lâchés → pondent dans les œufs de pyrale → larves dévorent le contenu → moins de chenilles → cultures protégées. Le cycle de la pyrale est INTERROMPU au stade de l\'œuf.',
+        check: (state) => {
+          const v=n(state['q4a']||'');
+          let pts=0,fb=[];
+          const checks=[
+            {words:['pond','oeuf','ponte'],label:'Étape 2 (ponte dans les œufs de pyrale)',ex:'Elles pondent des œufs dans les œufs de pyrale.'},
+            {words:['devore','mange','larve','contenu','nourr'],label:'Étape 3 (larves dévorent l\'œuf)',ex:'Les larves dévorent le contenu de l\'œuf.'},
+            {words:['moins','chenille','cycle','interromp','developpe','naissanc','protege'],label:'Étape 4 (moins de chenilles / cycle interrompu)',ex:'Il y a moins de chenilles → cultures protégées.'},
+          ];
+          checks.forEach(c=>{
+            if(c.words.some(w=>v.includes(w))){ pts++; fb.push({ok:true,txt:`✅ <strong>${c.label}</strong> : mentionnée !`}); }
+            else { fb.push({ok:false,txt:`❌ <strong>${c.label}</strong> — exemple : "${c.ex}"`}); }
+          });
+          return {pts,max:3,fb};
+        }
+      },
+      {
+        id: '4b', label: '/1 pt', type: 'radio',
+        instruction: 'COCHE le terme qui désigne l\'ensemble des transformations au cours du cycle de vie :',
+        field: 'q4b',
+        options: [
+          {val:'a', txt:'Accouplement'},
+          {val:'b', txt:'Fécondation'},
+          {val:'c', txt:'Nidation'},
+          {val:'d', txt:'Métamorphose ✓'},
+          {val:'e', txt:'Croissance continue'},
+        ],
+        correct: 'd',
+        lesson: '🦋 Métamorphose = l\'ensemble des transformations au cours du cycle de vie d\'un insecte : œuf → larve/chenille → nymphe → adulte. C\'est le terme scientifique précis à connaître.',
+        check: (state)=>{ const ok=state.q4b==='d'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Métamorphose !':'❌ Réponse : <strong>Métamorphose</strong> = transformation complète (œuf → chenille → nymphe → adulte). Pas "croissance continue" qui serait une croissance sans changement de forme.'}]}; }
+      }
+    ]
+  },
+
+  {
+    id: 'q5', num: 'Q5', title: 'Huile d\'olive — Techniques de séparation', pts: 8, livret: 1,
+    items: ['5a','5b','5c','5d'],
+    context: "Étapes : 1.Panier 2.Triage manuel (olives/feuilles/bois) 3.Tamis 4.Laver+broyer 5.Mélanger 30min 6.Reposer (solide/liquide) 7.Filtrer 8.Reposer (huile remonte) 9.Embouteiller",
+    subqs: [
+      {
+        id: '5a', label: '/1 pt (toutes les 5 correctes)',
+        type: 'checkbox',
+        instruction: 'ENTOURE les 5 étapes correspondant à une technique de séparation :',
+        hint: 'Tu dois cocher exactement 5 étapes. 1 point si les 5 sont toutes correctes.',
+        field: 'q5a',
+        options: [
+          {val:'1',txt:'Étape 1 — Déposer dans un panier'},
+          {val:'2',txt:'Étape 2 — Séparer à la main ✓'},
+          {val:'3',txt:'Étape 3 — Tamis ✓'},
+          {val:'4',txt:'Étape 4 — Laver et broyer'},
+          {val:'5',txt:'Étape 5 — Mélanger 30 min'},
+          {val:'6',txt:'Étape 6 — Reposer (solide/liquide) ✓'},
+          {val:'7',txt:'Étape 7 — Filtrer ✓'},
+          {val:'8',txt:'Étape 8 — Reposer (huile remonte) ✓'},
+          {val:'9',txt:'Étape 9 — Embouteiller'},
+        ],
+        correct: ['2','3','6','7','8'],
+        lesson: '🫒 Étape 4 (laver) ≠ séparation. La séparation = on distingue et on isole des composants. Étape 2=triage, 3=tamisage, 6=décantation, 7=filtration, 8=décantation.',
+        check: (state)=>{
+          const sel=state.q5a||[];
+          const exp=['2','3','6','7','8'];
+          const ok=exp.every(e=>sel.includes(e)) && sel.every(s=>exp.includes(s));
+          return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct ! Les 5 étapes sont : 2, 3, 6, 7, 8':'❌ Les 5 étapes correctes sont : <strong>2, 3, 6, 7, 8</strong>. Étape 4 (laver) = nettoyage, pas une séparation au sens scientifique.'}]};
+        }
+      },
+      {
+        id: '5b', label: '/5 pts (1 pt par technique)',
+        type: 'table-tech',
+        instruction: 'NOMME la technique de séparation pour chaque étape :',
+        rows: [
+          {etape:'Étape 2', field:'q5b2', answers:['triage','tri'], correct:'Triage (manuel)'},
+          {etape:'Étape 3', field:'q5b3', answers:['tamis','tamisage'], correct:'Tamisage'},
+          {etape:'Étape 6', field:'q5b6', answers:['decant'], correct:'Décantation'},
+          {etape:'Étape 7', field:'q5b7', answers:['filtrat','filtr'], correct:'Filtration'},
+          {etape:'Étape 8', field:'q5b8', answers:['decant'], correct:'Décantation'},
+        ],
+        lesson: '📚 Les 4 techniques à connaître : Triage = à la main. Tamisage = tamis/passoire. Décantation = laisser reposer (les composants se séparent par densité). Filtration = filtre/passoire fine.',
+        check: (state)=>{
+          const rows=[
+            {field:'q5b2',answers:['triage','tri'],lbl:'Étape 2',correct:'Triage (manuel)'},
+            {field:'q5b3',answers:['tamis','tamisage'],lbl:'Étape 3',correct:'Tamisage'},
+            {field:'q5b6',answers:['decant'],lbl:'Étape 6',correct:'Décantation'},
+            {field:'q5b7',answers:['filtrat','filtr'],lbl:'Étape 7',correct:'Filtration'},
+            {field:'q5b8',answers:['decant'],lbl:'Étape 8',correct:'Décantation'},
+          ];
+          let pts=0,fb=[];
+          rows.forEach(r=>{
+            const v=n(state[r.field]||'');
+            const ok=r.answers.some(a=>v.includes(a));
+            if(ok){pts++;fb.push({ok:true,txt:`✅ <strong>${r.lbl}</strong> : ${r.correct}`});}
+            else{fb.push({ok:false,txt:`❌ <strong>${r.lbl}</strong> → attendu : <code>${r.correct}</code> — tu as mis : <code>${state[r.field]||'vide'}</code>`});}
+          });
+          return {pts,max:5,fb};
+        }
+      },
+      {
+        id: '5c', label: '/1 pt', type: 'radio',
+        instruction: 'À l\'étape 6, quel est le type de mélange ? (partie solide + partie liquide visible)',
+        field: 'q5c',
+        options: [
+          {val:'a', txt:'Mélange homogène'},
+          {val:'b', txt:'Mélange hétérogène ✓'},
+        ],
+        correct: 'b',
+        lesson: '🧪 Hétérogène = on voit les différentes parties (solide + liquide séparés). Homogène = aspect uniforme, on ne distingue rien.',
+        check: (state)=>{ const ok=state.q5c==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : hétérogène (on voit la partie solide ET la partie liquide séparées)':'❌ Réponse : <strong>Mélange hétérogène</strong> — on distingue clairement deux parties : le solide et le liquide.'}]}; }
+      },
+      {
+        id: '5d', label: '/1 pt', type: 'radio',
+        instruction: 'Les "substances composées de molécules identiques" sont :',
+        field: 'q5d',
+        options: [
+          {val:'a', txt:'Des mélanges'},
+          {val:'b', txt:'Des corps purs ✓'},
+          {val:'c', txt:'Des liquides'},
+          {val:'d', txt:'Des solutions'},
+        ],
+        correct: 'b',
+        lesson: '⚗️ Corps pur = une seule sorte de molécules. Exemples : eau pure (H₂O), or, dioxygène (O₂). Un mélange = plusieurs corps purs ensemble. Une solution = corps purs dissous dans un solvant.',
+        check: (state)=>{ const ok=state.q5d==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : corps purs !':'❌ Réponse : <strong>Corps purs</strong> = une seule sorte de molécules (H₂O, O₂...). Un mélange = plusieurs corps purs ensemble.'}]}; }
+      }
+    ]
+  },
+
+  {
+    id: 'q6', num: 'Q6', title: 'Sylvia et le corset — Ventilation', pts: 5, livret: 1,
+    items: ['6'],
+    context: "Sylvia s'évanouit au carnaval de Venise. L'évanouissement = diminution d'apport d'oxygène au cerveau. Le corset écrase la cage thoracique et limite la ventilation pulmonaire. Le médecin desserre le corset.",
+    subqs: [
+      {
+        id: '6', label: '1 pt par ligne', type: 'tf',
+        instruction: 'ENTOURE VRAI ou FAUX pour chaque affirmation :',
+        field: 'q6',
+        statements: [
+          {txt: 'Le cerveau de Sylvia a été moins bien alimenté en oxygène à cause du corset serré.', answer: 'V'},
+          {txt: 'La quantité d\'oxygène dans le sang de Sylvia est restée inchangée.', answer: 'F'},
+          {txt: 'Le corset limite les mouvements ventilatoires en comprimant la cage thoracique.', answer: 'V'},
+          {txt: 'À cause du corset trop serré, il n\'y a plus assez d\'air qui entre dans les poumons de Sylvia.', answer: 'V'},
+          {txt: 'Quand le médecin a desserré le corset, la quantité d\'air dans le sang de Sylvia a diminué.', answer: 'F'},
+        ],
+        lesson: '🫁 Raisonnement logique : Corset serré → cage thoracique comprimée → poumons se dilatent moins → moins d\'air inspiré → moins d\'O₂ dans le sang → moins d\'O₂ au cerveau → évanouissement. Desserrer = processus inverse.',
+        check: (state)=>{
+          const ans=state.q6||[];
+          const correct=['V','F','V','V','F'];
+          const labels=['Cerveau moins bien alimenté','Quantité O₂ sang inchangée','Corset comprime la cage','Pas assez d\'air dans les poumons','Desserrer = moins d\'air'];
+          let pts=0,fb=[];
+          correct.forEach((c,i)=>{
+            const ok=ans[i]===c;
+            if(ok){pts++;fb.push({ok:true,txt:`✅ Affirmation ${i+1} : <strong>${c==='V'?'VRAI':'FAUX'}</strong> — correct !`});}
+            else{fb.push({ok:false,txt:`❌ Affirmation ${i+1} "${labels[i]}" → réponse : <strong>${c==='V'?'VRAI':'FAUX'}</strong> (tu as mis : ${ans[i]||'rien'})`});}
+          });
+          return {pts,max:5,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q7', num: 'Q7', title: 'Stalactites sur la voiture — Changements d\'état', pts: 4, livret: 1,
+    items: ['7'],
+    context: "Température : -8°C, il a neigé. Mathis déneige sa voiture puis revient. La température est toujours -8°C mais il y a moins de neige sur le capot et des stalactites se sont formées sous la plaque. Le capot s'échauffe quand le moteur tourne.",
+    subqs: [
+      {
+        id: '7', label: '/4 pts (1 pt par élément)', type: 'open-keywords',
+        instruction: 'EXPLIQUE comment les stalactites se sont formées (4 éléments attendus) :',
+        field: 'q7',
+        placeholder: 'Car... le moteur...',
+        keywords: [
+          {pts:1, words:['moteur','chaleur','chaud','capot'], label:'Le moteur dégage de la chaleur (le capot est chaud)'},
+          {pts:1, words:['fond','fusion','liquide','neige fond'], label:'La neige fond (fusion : solide → liquide)'},
+          {pts:1, words:['coule','deplace','ecoul','descend','glisse','vers la plaque'], label:'L\'eau se déplace / coule vers la plaque d\'immatriculation'},
+          {pts:1, words:['gel','solid','stalact','congel','gele','solide'], label:'L\'eau gèle / se solidifie à -8°C (solidification : liquide → solide)'},
+        ],
+        lesson: '❄️ 4 étapes : 1) Moteur = source de chaleur → capot chaud. 2) Neige fond = FUSION (solide→liquide). 3) Eau coule vers la plaque. 4) Contact avec air à -8°C → eau SOLIDIFICATION (liquide→solide) = stalactites. Retiens les termes : fusion et solidification.',
+        check: (state)=>{
+          const v=n(state['q7']||'');
+          const checks=[
+            {words:['moteur','chaleur','chaud','capot','source'],label:'Le moteur dégage de la chaleur',ex:'Le moteur chauffe le capot'},
+            {words:['fond','fusion','liquide'],label:'La neige fond (fusion)',ex:'La neige fond (changement solide→liquide)'},
+            {words:['coule','deplace','ecoul','descend','glisse','plaque','vers'],label:'L\'eau coule vers la plaque',ex:'L\'eau coule le long du capot vers la plaque'},
+            {words:['gel','solid','stalact','congel'],label:'L\'eau gèle (solidification)',ex:'L\'eau gèle à -8°C → stalactites'},
+          ];
+          let pts=0,fb=[];
+          checks.forEach(c=>{
+            if(c.words.some(w=>v.includes(w))){ pts++; fb.push({ok:true,txt:`✅ <strong>${c.label}</strong> mentionné !`}); }
+            else { fb.push({ok:false,txt:`❌ <strong>${c.label}</strong> manquant — exemple : "<em>${c.ex}</em>"`}); }
+          });
+          return {pts,max:4,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q8', num: 'Q8', title: 'Ventilateur de poche — Circuit électrique', pts: 7, livret: 1,
+    items: ['8a','8b','8c','8d'],
+    context: "Dorothée trouve un ventilateur (hélice, moteur, bouton On/Off, piles). Elle appuie sur On/Off mais l'hélice ne tourne pas. Elle répare ensuite le ventilateur.",
+    subqs: [
+      {
+        id: '8a', label: '/2 pts (1 pt par hypothèse)', type: 'multi-text',
+        instruction: 'ÉCRIS 2 hypothèses qui pourraient expliquer que le ventilateur ne fonctionne pas :',
+        hint: 'Une hypothèse = une explication POSSIBLE (pas certaine). Exemples valides : Les piles sont plates, le moteur est cassé, les fils ne sont pas bien branchés...',
+        fields: [
+          {id:'q8a1', placeholder:'Hypothèse 1...', label:'Hypothèse 1', freeform:true},
+          {id:'q8a2', placeholder:'Hypothèse 2...', label:'Hypothèse 2', freeform:true},
+        ],
+        lesson: '💡 Hypothèse ≠ fait. Un FAIT = ce qu\'on observe directement ("l\'hélice ne tourne pas"). Une HYPOTHÈSE = une explication possible, non encore vérifiée ("peut-être que les piles sont mortes"). Toute réponse plausible est acceptée.',
+        check: (state)=>{
+          const h1=state.q8a1||'', h2=state.q8a2||'';
+          const plausible=(v)=>n(v).length>5;
+          let pts=0,fb=[];
+          if(plausible(h1)){pts++;fb.push({ok:true,txt:`✅ Hypothèse 1 plausible : "<em>${h1}</em>"`});}
+          else{fb.push({ok:false,txt:'❌ Hypothèse 1 insuffisante — exemples : "Les piles sont plates", "Le moteur est cassé", "Les piles sont à l\'envers", "L\'interrupteur est défectueux"'});}
+          if(plausible(h2)){pts++;fb.push({ok:true,txt:`✅ Hypothèse 2 plausible : "<em>${h2}</em>"`});}
+          else{fb.push({ok:false,txt:'❌ Hypothèse 2 insuffisante — donne une 2ème cause différente'});}
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '8b', label: '/1 pt', type: 'single-text',
+        instruction: 'ÉCRIS un FAIT à propos de ce ventilateur :',
+        hint: 'Un fait = ce qu\'on OBSERVE directement, sans interpréter.',
+        field: 'q8b',
+        placeholder: 'Un fait observable : ...',
+        lesson: '👀 Fait vs Hypothèse : FAIT = "Il y a un bouton On/Off" / "Le ventilateur est bleu" / "Il y a une hélice". HYPOTHÈSE = "Peut-être que les piles sont mortes".',
+        check: (state)=>{
+          const v=state.q8b||'';
+          const ok=n(v).length>4;
+          return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?`✅ Fait noté : "<em>${v}</em>"`:'❌ Donne un fait observable — exemples : "Le ventilateur est bleu", "Il y a une hélice", "Il y a un bouton On/Off", "On voit une pile"'}]};
+        }
+      },
+      {
+        id: '8c', label: '/1 pt — à faire sur papier', type: 'draw',
+        instruction: 'SCHÉMATISE : le circuit forme une boucle fermée',
+        drawGuide: [
+          '⭕ Le circuit doit former une BOUCLE complète (tous les éléments reliés)',
+          '↔️ Chaque symbole est relié à ses DEUX bornes',
+        ],
+        lesson: '⚡ Un circuit électrique fonctionnel doit être une boucle FERMÉE. Si le circuit est ouvert (interrupteur ouvert = brisé), le courant ne passe pas.',
+        check: ()=>({ pts:1, max:1, manual:true, fb:[{ok:'manual',txt:'À évaluer sur papier : le circuit doit former une boucle complète — tous les symboles reliés à leurs deux bornes. 1 point si la boucle est fermée.'}] })
+      },
+      {
+        id: '8d', label: '/3 pts (1 pt par symbole)', type: 'draw',
+        instruction: 'Le circuit doit contenir ces 3 symboles conventionnels :',
+        drawGuide: [
+          '🔋 Symbole de la PILE (générateur) : ⊣ (une longue et une courte barre)',
+          '⚙️ Symbole du MOTEUR : un M dans un cercle',
+          '🔘 Symbole de l\'INTERRUPTEUR FERMÉ : deux traits reliés —/— (fermé)',
+        ],
+        lesson: '📐 Les 3 symboles obligatoires : Pile (⊣), Moteur (M dans cercle), Interrupteur FERMÉ (les deux traits se touchent). Si l\'interrupteur est ouvert, le circuit est interrompu = pas de courant.',
+        check: ()=>({ pts:3, max:3, manual:true, fb:[{ok:'manual',txt:'À évaluer sur papier : 1 pt pour le symbole Pile, 1 pt pour le symbole Moteur (M dans cercle), 1 pt pour l\'interrupteur FERMÉ.'}] })
+      }
+    ]
+  },
+
+  {
+    id: 'q9', num: 'Q9', title: 'Réseau trophique — Toundra arctique', pts: 8, livret: 1,
+    items: ['9a','9b','9c','9d','9e','9f'],
+    context: "Réseau trophique : Saule arctique → Lièvre arctique → Renard arctique ↗ Loup arctique. Saxifrage → Lemming → Hermine arctique → Harfang des neiges → Renard arctique. Aussi : Harfang → Lièvre. Loup arctique = super-prédateur.",
+    subqs: [
+      {
+        id: '9a', label: '/1 pt (6 maillons corrects + ordre + flèches)', type: 'chain',
+        instruction: 'CONSTRUIS une chaîne alimentaire à 6 maillons (la flèche signifie "est mangé par") :',
+        fields: ['c1','c2','c3','c4','c5','c6'],
+        lesson: '🐺 Chaînes valides : Saxifrage→Lemming→Hermine→Harfang→Renard→Loup. Ou : Saule→Lièvre→Hermine→Harfang→Renard→Loup. La flèche = "est mangé par". Commence toujours par un PRODUCTEUR (plante).',
+        check: (state)=>{
+          const chain=[n(state.c1||''),n(state.c2||''),n(state.c3||''),n(state.c4||''),n(state.c5||''),n(state.c6||'')];
+          const valid=[
+            ['saxifrage','lemming','hermine','harfang','renard','loup'],
+            ['saxifrage','lievre','hermine','harfang','renard','loup'],
+            ['saule','lemming','hermine','harfang','renard','loup'],
+            ['saule','lievre','hermine','harfang','renard','loup'],
+          ];
+          const ok=valid.some(v=>v.every((x,i)=>chain[i].includes(x)));
+          return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Chaîne correcte !':'❌ Chaîne incorrecte. Exemples valides : <strong>Saxifrage → Lemming → Hermine → Harfang → Renard → Loup</strong>. Tu dois avoir 6 maillons dans le bon ordre, en commençant par une plante.'}]};
+        }
+      },
+      {
+        id: '9b', label: '/1 pt', type: 'radio',
+        instruction: 'NOMME le régime alimentaire du Lemming :',
+        field: 'q9b',
+        options: [
+          {val:'a', txt:'Carnivore'},
+          {val:'b', txt:'Herbivore ✓'},
+          {val:'c', txt:'Omnivore'},
+          {val:'d', txt:'Phytophage ✓ (aussi accepté)'},
+        ],
+        correct: 'b',
+        lesson: '🐭 Le Lemming mange des plantes (Saxifrage, Saule) = Herbivore (ou Phytophage). Un carnivore mange des animaux. Un omnivore mange les deux.',
+        check: (state)=>{ const ok=state.q9b==='b'||state.q9b==='d'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Herbivore (ou Phytophage)':'❌ Réponse : <strong>Herbivore</strong> (ou Phytophage). Le Lemming mange des plantes (Saxifrage, Saule).'}]}; }
+      },
+      {
+        id: '9c', label: '/2 pts (1 pt par carnivore)', type: 'multi-text',
+        instruction: 'ÉCRIS le nom de 2 carnivores du réseau :',
+        fields: [
+          {id:'q9c1', placeholder:'Carnivore 1...', label:'Carnivore 1', answers:['hermine','harfang','renard','loup'], correct:'Hermine, Harfang, Renard ou Loup'},
+          {id:'q9c2', placeholder:'Carnivore 2 (différent)...', label:'Carnivore 2', answers:['hermine','harfang','renard','loup'], correct:'Hermine, Harfang, Renard ou Loup'},
+        ],
+        lesson: '🦊 Les 4 carnivores du réseau : Hermine arctique, Harfang des neiges, Renard arctique, Loup arctique. Tous mangent d\'autres animaux.',
+        check: (state)=>{
+          const animals=['hermine','harfang','renard','loup'];
+          const v1=n(state.q9c1||''), v2=n(state.q9c2||'');
+          const ok1=animals.some(a=>v1.includes(a));
+          const ok2=animals.some(a=>v2.includes(a));
+          let pts=0,fb=[];
+          if(ok1){pts++;fb.push({ok:true,txt:`✅ Carnivore 1 correct : <em>${state.q9c1}</em>`});}
+          else{fb.push({ok:false,txt:'❌ Carnivore 1 : réponse parmi Hermine, Harfang, Renard ou Loup'});}
+          if(ok2){pts++;fb.push({ok:true,txt:`✅ Carnivore 2 correct : <em>${state.q9c2}</em>`});}
+          else{fb.push({ok:false,txt:'❌ Carnivore 2 : réponse parmi Hermine, Harfang, Renard ou Loup (différent du 1er)'});}
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '9d', label: '/1 pt', type: 'radio',
+        instruction: 'CITE une proie du Harfang des neiges :',
+        field: 'q9d',
+        options: [
+          {val:'a', txt:'Lièvre arctique ✓'},
+          {val:'b', txt:'Hermine arctique ✓'},
+          {val:'c', txt:'Lemming ✓'},
+          {val:'d', txt:'Loup arctique'},
+        ],
+        correct: ['a','b','c'],
+        lesson: '🦉 Le Harfang des neiges mange le Lièvre arctique, l\'Hermine arctique ET le Lemming. Toutes ces réponses sont correctes.',
+        check: (state)=>{ const ok=['a','b','c'].includes(state.q9d); return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct ! Le Harfang mange bien cette proie.':'❌ Le Harfang des neiges mange : Lièvre arctique, Hermine arctique ou Lemming. Pas le Loup.'}]}; }
+      },
+      {
+        id: '9e', label: '/2 pts (1 pt par producteur)', type: 'multi-text',
+        instruction: 'ÉCRIS le nom des 2 producteurs du réseau :',
+        fields: [
+          {id:'q9e1', placeholder:'Producteur 1...', label:'Producteur 1', answers:['saxifrage','saule'], correct:'Saxifrage ou Saule arctique'},
+          {id:'q9e2', placeholder:'Producteur 2...', label:'Producteur 2', answers:['saxifrage','saule'], correct:'Saxifrage ou Saule arctique'},
+        ],
+        lesson: '🌱 Les producteurs = les plantes qui produisent leur propre énergie par photosynthèse. Dans ce réseau : Saxifrage et Saule arctique. Ce sont les 1ers maillons de toute chaîne alimentaire.',
+        check: (state)=>{
+          const plants=['saxifrage','saule'];
+          const v1=n(state.q9e1||''), v2=n(state.q9e2||'');
+          const ok1=plants.some(a=>v1.includes(a));
+          const ok2=plants.some(a=>v2.includes(a));
+          let pts=0,fb=[];
+          if(ok1){pts++;fb.push({ok:true,txt:`✅ Producteur 1 correct : <em>${state.q9e1}</em>`});}
+          else{fb.push({ok:false,txt:'❌ Producteur 1 : Saxifrage ou Saule arctique'});}
+          if(ok2){pts++;fb.push({ok:true,txt:`✅ Producteur 2 correct : <em>${state.q9e2}</em>`});}
+          else{fb.push({ok:false,txt:'❌ Producteur 2 : Saxifrage ou Saule arctique (l\'autre)'});}
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '9f', label: '/1 pt', type: 'radio',
+        instruction: 'CITE un prédateur qui n\'est pas une proie dans ce réseau :',
+        field: 'q9f',
+        options: [
+          {val:'a', txt:'Harfang des neiges'},
+          {val:'b', txt:'Renard arctique'},
+          {val:'c', txt:'Hermine arctique'},
+          {val:'d', txt:'Loup arctique ✓'},
+        ],
+        correct: 'd',
+        lesson: '🐺 Le Loup arctique est le SUPER-PRÉDATEUR : il mange d\'autres animaux mais aucun animal de ce réseau ne le mange. Harfang, Renard, Hermine sont tous aussi des PROIES.',
+        check: (state)=>{ const ok=state.q9f==='d'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Loup arctique = super-prédateur !':'❌ Réponse : <strong>Loup arctique</strong>. Le Harfang est mangé par le Renard, le Renard par le Loup. Seul le Loup n\'est la proie de personne.'}]}; }
+      }
+    ]
+  },
+
+  {
+    id: 'q10', num: 'Q10', title: 'Empreintes de dinosaures — Pression', pts: 5, livret: 1,
+    items: ['10a','10b'],
+    context: "Camptosaurus : 50 000 N, 2 pattes, 0,3 m² = Empreinte B (moyen). Tricératops : 80 000 N, 4 pattes, 0,3 m². Shantungosaurus : 80 000 N, 2 pattes, 0,4 m². Empreinte A = peu d\'enfoncement. Empreinte C = enfoncement important.",
+    subqs: [
+      {
+        id: '10a', label: '/4 pts (1 choix + 3 justification)', type: 'radio-plus-open',
+        instruction: 'Quel dinosaure correspond à l\'Empreinte A (peu d\'enfoncement) ?',
+        field: 'q10a-choice',
+        options: [
+          {val:'a', txt:'Tricératops ✓'},
+          {val:'b', txt:'Shantungosaurus'},
+        ],
+        correct: 'a',
+        openField: 'q10a-just',
+        openInstruction: 'JUSTIFIE sans calcul (3 éléments attendus) :',
+        openPlaceholder: 'J\'ai choisi ce dinosaure car...',
+        lesson: '📐 Calcul pour vérifier : Tricéra p=80000/(4×0,3)=66 667 Pa. Shantungo p=80000/(2×0,4)=100 000 Pa. Campto p=50000/(2×0,3)=83 333 Pa. Donc : Tricéra < Campto < Shantungo → A=Tricéra, B=Campto, C=Shantungo.',
+        check: (state)=>{
+          const choiceOk=state['q10a-choice']==='a';
+          const v=n(state['q10a-just']||'');
+          const e1=v.includes('80000')||v.includes('80 000')||v.includes('meme force')||v.includes('même force')||v.includes('même poids')||v.includes('egale')||v.includes('égale');
+          const e2=v.includes('4 patte')||v.includes('quatre')||v.includes('1,2')||v.includes('surface')||v.includes('plus grand');
+          const e3=v.includes('enfonce')||v.includes('moins')||v.includes('pression plus');
+          let pts=0,fb=[];
+          if(choiceOk){pts++;fb.push({ok:true,txt:'✅ Choix correct : Tricératops = empreinte A (peu d\'enfoncement)'});}
+          else{fb.push({ok:false,txt:'❌ Mauvais choix — c\'est le <strong>Tricératops</strong> qui s\'enfonce le moins (empreinte A).'});}
+          if(e1){pts++;fb.push({ok:true,txt:'✅ Forces égales mentionnées (80 000 N tous les deux)'});}
+          else{fb.push({ok:false,txt:'❌ Manque : Tricératops ET Shantungosaurus exercent la <strong>même force (80 000 N)</strong>'});}
+          if(e2){pts++;fb.push({ok:true,txt:'✅ Surface de contact plus grande mentionnée (4 pattes × 0,3 m² = 1,2 m²)'});}
+          else{fb.push({ok:false,txt:'❌ Manque : Tricératops a <strong>4 pattes</strong> → surface = 4 × 0,3 = <strong>1,2 m²</strong> vs Shantungo = 2 × 0,4 = 0,8 m²'});}
+          if(e3){pts++;fb.push({ok:true,txt:'✅ Enfoncement moindre mentionné'});}
+          else{fb.push({ok:false,txt:'❌ Manque la conclusion : <strong>plus la surface est grande → moins on s\'enfonce</strong> (pression plus faible)'});}
+          return {pts,max:4,fb};
+        }
+      },
+      {
+        id: '10b', label: '/1 pt', type: 'radio',
+        instruction: 'COCHE la formule qui relie pression, force et surface :',
+        field: 'q10b',
+        options: [
+          {val:'a', txt:'p = S / F'},
+          {val:'b', txt:'p = F / S ✓'},
+          {val:'c', txt:'p = S / G'},
+          {val:'d', txt:'p = G / F'},
+        ],
+        correct: 'b',
+        lesson: '📏 p = F/S → Pression (Pa) = Force (N) / Surface (m²). Plus la surface est grande, plus la pression est faible à force égale. Exemple : une femme en talons aiguilles exerce plus de pression qu\'un éléphant !',
+        check: (state)=>{ const ok=state.q10b==='b'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : p = F/S !':'❌ Réponse : <strong>p = F/S</strong> (Pression = Force divisé par Surface). Unité : Pascals (Pa).'}]}; }
+      }
+    ]
+  },
+
+  {
+    id: 'q11', num: 'Q11', title: 'Consommation O₂ — Poisson rouge', pts: 4, livret: 1,
+    items: ['11a','11b'],
+    context: "Un poisson rouge est dans un bocal fermé. On mesure l'oxygène dissous toutes les 10 min pendant 40 min. Température constante : 20°C. Valeurs : 7,02 → 6,97 → 6,94 → 6,91 → 6,88 mg/L.",
+    subqs: [
+      {
+        id: '11a', label: '/3 pts', type: 'exp-table',
+        instruction: 'COMPLÈTE le tableau des variables (nom + unité + valeurs en ordre chronologique) :',
+        rows: [
+          {field1:'q11var1', field2:'q11unit1', label:'Variable 1', ph1:'Nom de la variable...', ph2:'Unité...'},
+          {field1:'q11var2', field2:'q11unit2', label:'Variable 2', ph1:'Nom de la variable...', ph2:'Unité...'},
+        ],
+        valFields: [['q11v1a','q11v1b','q11v1c','q11v1d','q11v1e'],['q11v2a','q11v2b','q11v2c','q11v2d','q11v2e']],
+        lesson: '📊 Variable 1 = Quantité d\'oxygène dissous (mg/L), valeurs : 7,02 / 6,97 / 6,94 / 6,91 / 6,88. Variable 2 = Temps (min), valeurs : 0 / 10 / 20 / 30 / 40. (Les deux lignes peuvent être inversées.)',
+        check: (state)=>{
+          const v=[state.q11var1||'',state.q11var2||''].map(n);
+          const u=[state.q11unit1||'',state.q11unit2||''].map(n);
+          const oxyName=v.some(x=>x.includes('oxygene')||x.includes('o2')||x.includes('diss'));
+          const timeName=v.some(x=>x.includes('temps')||x.includes('min')||x.includes('duree'));
+          const oxyUnit=u.some(x=>x.includes('mg')||x.includes('mg/l'));
+          const timeUnit=u.some(x=>x.includes('min'));
+          const vals1=[state.q11v1a,state.q11v1b,state.q11v1c,state.q11v1d,state.q11v1e].map(x=>(x||'').trim());
+          const vals2=[state.q11v2a,state.q11v2b,state.q11v2c,state.q11v2d,state.q11v2e].map(x=>(x||'').trim());
+          const oxyVals=['7,02','6,97','6,94','6,91','6,88'];
+          const timeVals=['0','10','20','30','40'];
+          const matchOxy=vv=>oxyVals.every((x,i)=>vv[i]===x||vv[i]===x.replace(',','.'));
+          const matchTime=vv=>timeVals.every((x,i)=>vv[i]===x);
+          const valsOk=(matchOxy(vals1)||matchOxy(vals2))&&(matchTime(vals1)||matchTime(vals2));
+          let pts=0,fb=[];
+          if(oxyName){pts++;fb.push({ok:true,txt:'✅ Variable oxygène identifiée'});}
+          else{fb.push({ok:false,txt:'❌ Manque : variable <strong>"Quantité d\'oxygène dissous"</strong>'});}
+          if(timeName){pts++;fb.push({ok:true,txt:'✅ Variable temps identifiée'});}
+          else{fb.push({ok:false,txt:'❌ Manque : variable <strong>"Temps"</strong>'});}
+          if(valsOk){pts++;fb.push({ok:true,txt:'✅ Valeurs correctes et dans l\'ordre chronologique'});}
+          else{fb.push({ok:false,txt:'❌ Valeurs incorrectes. O₂ (mg/L) : <code>7,02 / 6,97 / 6,94 / 6,91 / 6,88</code> — Temps (min) : <code>0 / 10 / 20 / 30 / 40</code>'});}
+          return {pts,max:3,fb};
+        }
+      },
+      {
+        id: '11b', label: '/1 pt', type: 'radio',
+        instruction: 'COCHE le graphique dont l\'allure correspond à l\'expérience :',
+        field: 'q11b',
+        options: [
+          {val:'1', txt:'Graphique 1 — Courbe croissante (monte régulièrement)'},
+          {val:'2', txt:'Graphique 2 — Courbe en cloche (monte puis descend)'},
+          {val:'3', txt:'Graphique 3 — Ligne horizontale (constante)'},
+          {val:'4', txt:'Graphique 4 — Courbe décroissante (descend régulièrement) ✓'},
+        ],
+        correct: '4',
+        lesson: '📉 Le poisson consomme l\'O₂ → la quantité d\'O₂ dissous diminue progressivement = courbe qui descend régulièrement = Graphique 4.',
+        check: (state)=>{ const ok=state.q11b==='4'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : Graphique 4 (décroissant) — le poisson consomme l\'O₂, donc la quantité diminue.':'❌ Réponse : <strong>Graphique 4</strong> (courbe décroissante). Le poisson consomme l\'O₂ → la quantité dissous diminue progressivement.'}]}; }
+      }
+    ]
+  },
+
+  {
+    id: 'q12', num: 'Q12', title: 'Types de mélanges — Homogène / Hétérogène', pts: 4, livret: 1,
+    items: ['12'],
+    context: "Mélange homogène = aspect uniforme, impossible de distinguer les composants à l'œil nu. Mélange hétérogène = on voit clairement les différentes parties.",
+    subqs: [
+      {
+        id: '12', label: '1 pt par réponse correcte', type: 'table-hh',
+        instruction: 'COCHE le type de mélange pour chaque substance :',
+        rows: [
+          {substance:'Eau de source', field:'q12-1', correct:'H', label:'homogène'},
+          {substance:'Thé avec feuilles de menthe', field:'q12-2', correct:'He', label:'hétérogène'},
+          {substance:'Eau aromatisée', field:'q12-3', correct:'H', label:'homogène'},
+          {substance:'Huile essentielle', field:'q12-4', correct:'H', label:'homogène'},
+        ],
+        lesson: '🧪 Truc : regarde si tu vois des "morceaux" ou des parties distinctes. Feuilles de menthe dans le thé = visible → hétérogène. Eau colorée/aromatisée/pure = uniforme → homogène. Huile essentielle = liquide uniforme → homogène.',
+        check: (state)=>{
+          const rows=[
+            {field:'q12-1',correct:'H',sub:'Eau de source'},
+            {field:'q12-2',correct:'He',sub:'Thé avec feuilles de menthe'},
+            {field:'q12-3',correct:'H',sub:'Eau aromatisée'},
+            {field:'q12-4',correct:'H',sub:'Huile essentielle'},
+          ];
+          let pts=0,fb=[];
+          rows.forEach(r=>{
+            const ok=state[r.field]===r.correct;
+            if(ok){pts++;fb.push({ok:true,txt:`✅ <strong>${r.sub}</strong> : ${r.correct==='H'?'homogène':'hétérogène'} — correct !`});}
+            else{fb.push({ok:false,txt:`❌ <strong>${r.sub}</strong> → <code>${r.correct==='H'?'homogène':'hétérogène'}</code> (tu as mis : ${state[r.field]==='H'?'homogène':state[r.field]==='He'?'hétérogène':'rien'})`});}
+          });
+          return {pts,max:4,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q13', num: 'Q13', title: 'Expérience filmée — Fourmis Camponotus', pts: 12, livret: 2,
+    items: ['13a','13b','13c','13d','13e'],
+    context: "Anne et Andrée observent leurs fourmis : elles vont sur la gaufre (sucrée), la pomme, la mandarine — mais PAS sur la salade. Elles veulent tester 2 paramètres avec une expérience : des cotons avec eau / eau sucrée / eau colorée / eau colorée sucrée.",
+    subqs: [
+      {
+        id: '13a', label: '/2 pts (1 pt par paramètre)', type: 'checkbox',
+        instruction: 'COCHE les 2 paramètres que les fourmis testent :',
+        hint: '⚠️ Exactement 2 cases. Si tu en coches plus de 2, tu perds tous les points.',
+        field: 'q13a',
+        options: [
+          {val:'couleur', txt:'La couleur des aliments ✓'},
+          {val:'temp', txt:'La température des aliments'},
+          {val:'sucre', txt:'La présence de sucre dans les aliments ✓'},
+          {val:'texture', txt:'La texture des aliments'},
+          {val:'sel', txt:'La présence de sel dans les aliments'},
+        ],
+        correct: ['couleur','sucre'],
+        lesson: '🐜 Logique de l\'expérience : Gaufre/pomme/mandarine = sucrées, salade = non sucrée → test du SUCRE. Les cotons colorés/non colorés testent la COULEUR.',
+        check: (state)=>{
+          const sel=state.q13a||[];
+          if(sel.length>2) return {pts:0,max:2,fb:[{ok:false,txt:'❌ Tu as coché plus de 2 paramètres → 0 point. Les 2 bons : <strong>la couleur</strong> + <strong>la présence de sucre</strong>.'}]};
+          const couleurOk=sel.includes('couleur'), sucreOk=sel.includes('sucre');
+          let pts=0,fb=[];
+          if(couleurOk){pts++;fb.push({ok:true,txt:'✅ La couleur des aliments : correct !'});}
+          else{fb.push({ok:false,txt:'❌ Manque : <strong>la couleur des aliments</strong>'});}
+          if(sucreOk){pts++;fb.push({ok:true,txt:'✅ La présence de sucre : correct !'});}
+          else{fb.push({ok:false,txt:'❌ Manque : <strong>la présence de sucre dans les aliments</strong>'});}
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '13b', label: '/1 pt (tout correct = 1 pt)', type: 'ordering',
+        instruction: 'ORDONNE les 4 étapes du mode opératoire (écris le numéro d\'ordre) :',
+        hint: '1 point uniquement si TOUTES les 4 étapes sont dans le bon ordre.',
+        rows: [
+          {field:'q13b1', txt:'Verser du sucre dans 3 récipients contenant de l\'eau.', correct:'2'},
+          {field:'q13b2', txt:'Prendre 6 cotons, les tremper chacun dans un récipient différent et déposer dans récipients vides.', correct:'4'},
+          {field:'q13b3', txt:'Ajouter colorant jaune et vert (dans eau sucrée + eau). Mélanger.', correct:'3'},
+          {field:'q13b4', txt:'Verser de l\'eau dans 6 récipients en verre.', correct:'1'},
+        ],
+        lesson: '🧫 Ordre logique : 1) Eau → 2) Sucre → 3) Colorants → 4) Cotons. On prépare les liquides avant de tremper les cotons.',
+        check: (state)=>{
+          const ok=state.q13b1==='2'&&state.q13b2==='4'&&state.q13b3==='3'&&state.q13b4==='1';
+          return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Ordre parfait !':'❌ Ordre correct : Ligne 1=<code>2</code>, Ligne 2=<code>4</code>, Ligne 3=<code>3</code>, Ligne 4=<code>1</code>. Logique : eau → sucre → colorants → cotons.'}]};
+        }
+      },
+      {
+        id: '13c', label: '/1 pt (4 bonnes = 1 pt)', type: 'radio',
+        instruction: 'Dans le schéma, place les numéros 3, 4, 5, 6 : 1=Bac fourmis · 2=Alu · 3=Coton+eau · 4=Coton+eau sucrée · 5=Coton+eau colorée · 6=Coton+eau colorée sucrée',
+        field: 'q13c',
+        options: [
+          {val:'a', txt:'Position haute gauche=3, haute droite=4, basse gauche=5, basse droite=6 ✓'},
+          {val:'b', txt:'Position haute gauche=4, haute droite=3, basse gauche=6, basse droite=5'},
+          {val:'c', txt:'Position haute gauche=5, haute droite=6, basse gauche=3, basse droite=4'},
+        ],
+        correct: 'a',
+        lesson: '🧪 Dans le schéma officiel : cotons blancs (3=eau, 4=eau sucrée) en haut, cotons colorés (5=eau colorée, 6=eau colorée sucrée) en bas. Les sucrés sont 4 et 6.',
+        check: (state)=>{ const ok=state.q13c==='a'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Légende correcte !':'❌ Placement correct : 3=coton+eau (blanc haut gauche), 4=coton+eau sucrée (blanc haut droit), 5=coton+eau colorée (jaune bas gauche), 6=coton+eau colorée sucrée (vert bas droit).'}]}; }
+      },
+      {
+        id: '13d', label: '/4 pts (1 pt par ligne)', type: 'tf4',
+        instruction: 'OBSERVATIONS : les fourmis restent-elles sur ces cotons ?',
+        field: 'q13d',
+        rows: [
+          {label:'Coton — Eau', answer:'non', txt:'Les fourmis NE restent PAS'},
+          {label:'Coton — Eau sucrée', answer:'oui', txt:'Les fourmis RESTENT'},
+          {label:'Coton — Eau colorée', answer:'non', txt:'Les fourmis NE restent PAS'},
+          {label:'Coton — Eau colorée sucrée', answer:'oui', txt:'Les fourmis RESTENT'},
+        ],
+        lesson: '🐜 Résultat clé : les fourmis vont sur les cotons SUCRÉS (eau sucrée + eau colorée sucrée). Elles ne vont PAS sur les cotons non sucrés (eau + eau colorée). La couleur ne change rien !',
+        check: (state)=>{
+          const ans=state.q13d||{};
+          const rows=[
+            {k:'0',correct:'non',lbl:'Eau'},
+            {k:'1',correct:'oui',lbl:'Eau sucrée'},
+            {k:'2',correct:'non',lbl:'Eau colorée'},
+            {k:'3',correct:'oui',lbl:'Eau colorée sucrée'},
+          ];
+          let pts=0,fb=[];
+          rows.forEach(r=>{
+            const ok=ans[r.k]===r.correct;
+            if(ok){pts++;fb.push({ok:true,txt:`✅ ${r.lbl} : ${r.correct==='oui'?'fourmis restent':'fourmis ne restent pas'}`});}
+            else{fb.push({ok:false,txt:`❌ ${r.lbl} : réponse = <strong>${r.correct==='oui'?'fourmis RESTENT':'fourmis NE restent PAS'}</strong>`});}
+          });
+          return {pts,max:4,fb};
+        }
+      },
+      {
+        id: '13e', label: '/2 pts (1 pt par conclusion)', type: 'multi-text',
+        instruction: 'RÉDIGE la conclusion pour chaque paramètre testé :',
+        fields: [
+          {id:'q13e1', placeholder:'Pour le paramètre SUCRE, la conclusion est...', label:'Paramètre 1 — Sucre', answers:['sucre','attire','aime','sucrée'], correct:'Les fourmis sont attirées par la présence de sucre (eau sucrée)'},
+          {id:'q13e2', placeholder:'Pour le paramètre COULEUR, la conclusion est...', label:'Paramètre 2 — Couleur', answers:['couleur','pas','non','n\'influence','n\'attire'], correct:'La couleur n\'influence pas le comportement des fourmis'},
+        ],
+        lesson: '📝 Conclusions officielles : 1) "Les fourmis sont attirées par les aliments sucrés" 2) "La couleur n\'est pas un facteur d\'attraction des fourmis". Ces conclusions seront validées par le document scientifique.',
+        check: (state)=>{
+          const rows=[
+            {field:'q13e1',words:['sucre','attire','aime'],lbl:'Paramètre sucre',correct:'Les fourmis sont attirées par la présence de sucre'},
+            {field:'q13e2',words:['couleur','pas','non','influence','attire'],lbl:'Paramètre couleur',correct:'La couleur n\'influence pas les fourmis'},
+          ];
+          let pts=0,fb=[];
+          rows.forEach(r=>{
+            const v=n(state[r.field]||'');
+            const ok=r.words.some(w=>v.includes(w))&&v.length>5;
+            if(ok){pts++;fb.push({ok:true,txt:`✅ <strong>${r.lbl}</strong> : bonne conclusion !`});}
+            else{fb.push({ok:false,txt:`❌ <strong>${r.lbl}</strong> → attendu : "<em>${r.correct}</em>"`});}
+          });
+          return {pts,max:2,fb};
+        }
+      }
+    ]
+  },
+
+  {
+    id: 'q14', num: 'Q14', title: 'Paquet de chips — Pression atmosphérique', pts: 6, livret: 2,
+    items: ['14a','14b','14c','14d'],
+    context: "Un paquet de chips (avec de l\'azote à l\'intérieur) est placé sous une cloche à vide. Étape A = état initial. Étape B = la pompe aspire l\'air autour du paquet. Étape C = on laisse rentrer l\'air dans la cloche.",
+    subqs: [
+      {
+        id: '14a', label: '/2 pts', type: 'multi-text',
+        instruction: 'DÉCRIS les changements observés sur le paquet de chips :',
+        fields: [
+          {id:'q14a1', placeholder:'À l\'étape B par rapport à A : le paquet...', label:'Étape B / A', answers:['gonfle','volume','augment','gros','grand','gonfl'], correct:'Le paquet de chips gonfle (son volume augmente)'},
+          {id:'q14a2', placeholder:'À l\'étape C par rapport à B : le paquet...', label:'Étape C / B', answers:['forme','normal','desgonfl','diminue','repren','aplat','degofl'], correct:'Le paquet reprend sa forme initiale (dégonfle)'},
+        ],
+        lesson: '💡 B = pompe aspire l\'air → pression autour du paquet diminue → le gaz à l\'intérieur se DILATE → paquet GONFLE. C = air rentre → pression revient normale → gaz se comprime → paquet REPREND sa forme.',
+        check: (state)=>{
+          const rows=[
+            {field:'q14a1',words:['gonfle','volume','augment','gros','grand','gonfl'],lbl:'Étape B / A',correct:'Le paquet gonfle / son volume augmente'},
+            {field:'q14a2',words:['forme','normal','desgonfl','diminue','repren','aplat','degonfl','retal'],lbl:'Étape C / B',correct:'Le paquet reprend sa forme initiale'},
+          ];
+          let pts=0,fb=[];
+          rows.forEach(r=>{
+            const v=n(state[r.field]||'');
+            const ok=r.words.some(w=>v.includes(w));
+            if(ok){pts++;fb.push({ok:true,txt:`✅ <strong>${r.lbl}</strong> : correct !`});}
+            else{fb.push({ok:false,txt:`❌ <strong>${r.lbl}</strong> → attendu : "<em>${r.correct}</em>"`});}
+          });
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '14b', label: '/2 pts', type: 'radio2',
+        instruction: 'À l\'étape B : ENTOURE les bonnes propositions :',
+        fields: [
+          {field:'q14b1', question:'La pression de l\'air à l\'intérieur de la cloche :', options:[{val:'aug',txt:'augmente'},{val:'same',txt:'reste la même'},{val:'dim',txt:'diminue ✓'}], correct:'dim', label:'Pression dans la cloche'},
+          {field:'q14b2', question:'Le volume de gaz à l\'intérieur du paquet de chips :', options:[{val:'aug',txt:'augmente ✓'},{val:'same',txt:'reste le même'},{val:'dim',txt:'diminue'}], correct:'aug', label:'Volume dans le paquet'},
+        ],
+        lesson: '⚗️ Loi de Boyle : quand la pression extérieure diminue, le volume du gaz augmente (à température constante). C\'est pour ça que les paquet de chips gonflent en altitude !',
+        check: (state)=>{
+          let pts=0,fb=[];
+          if(state.q14b1==='dim'){pts++;fb.push({ok:true,txt:'✅ Pression cloche : diminue (la pompe aspire l\'air)'});}
+          else{fb.push({ok:false,txt:'❌ Pression cloche : <strong>diminue</strong> (la pompe aspire l\'air autour du paquet)'});}
+          if(state.q14b2==='aug'){pts++;fb.push({ok:true,txt:'✅ Volume paquet : augmente (le gaz se dilate)'});}
+          else{fb.push({ok:false,txt:'❌ Volume paquet : <strong>augmente</strong> (quand pression ext. diminue → gaz se dilate)'});}
+          return {pts,max:2,fb};
+        }
+      },
+      {
+        id: '14c', label: '/1 pt', type: 'radio',
+        instruction: 'À l\'étape C : le nombre de molécules à l\'intérieur du paquet :',
+        field: 'q14c',
+        options: [
+          {val:'aug', txt:'augmente'},
+          {val:'same', txt:'reste le même ✓'},
+          {val:'dim', txt:'diminue'},
+        ],
+        correct: 'same',
+        lesson: '🔬 Le paquet est FERMÉ HERMÉTIQUEMENT → aucune molécule ne peut entrer ou sortir → le nombre de molécules reste identique. Seul le volume change, pas le nombre de molécules.',
+        check: (state)=>{ const ok=state.q14c==='same'; return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : reste le même. Le paquet est fermé → aucune molécule n\'entre ou ne sort.':'❌ Réponse : <strong>reste le même</strong> — le paquet est fermé hermétiquement, les molécules ne peuvent pas passer.'}]}; }
+      },
+      {
+        id: '14d', label: '/1 pt', type: 'single-text',
+        instruction: 'NOMME le terme scientifique pour "la pression de l\'air à l\'extérieur de la cloche" :',
+        field: 'q14d',
+        placeholder: 'Terme scientifique...',
+        lesson: '🌬️ Pression atmosphérique = la pression exercée par l\'air sur tout ce qui est à la surface de la Terre. Elle est d\'environ 101 325 Pa (= 1 atmosphère). Elle diminue en altitude (d\'où le paquet de chips qui gonfle en montagne).',
+        check: (state)=>{ const v=n(state.q14d||''); const ok=v.includes('pression atm')||v.includes('atmospherique'); return {pts:ok?1:0,max:1,fb:[{ok,txt:ok?'✅ Correct : pression atmosphérique !':'❌ Réponse : <strong>pression atmosphérique</strong> (uniquement ce terme est accepté selon le corrigé officiel).'}]}; }
+      }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════
+let state = {}; // field values
+let results = {}; // {qId: {pts, max, subResults: [{id,pts,max}]}}
+let tfState = {}; // for TF questions: {q6:[null,null...], q13d:{0:null,...}}
+let tries = 0;
+
+function n(s){ return s.toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+function save(){
+  try { localStorage.setItem('marius_state', JSON.stringify({state,results,tries})); } catch(e){}
+}
+function load(){
+  try {
+    const d = JSON.parse(localStorage.getItem('marius_state')||'{}');
+    if(d.state) state=d.state;
+    if(d.results) results=d.results;
+    if(d.tries) tries=d.tries;
+  } catch(e){}
+}
+
+function totalScore(){
+  let pts=0, max=0;
+  QUESTIONS.forEach(q=>{ if(results[q.id]){ pts+=results[q.id].pts; max+=results[q.id].max; } else { max+=q.pts; } });
+  return {pts, max:92};
+}
+function answeredCount(){ return Object.keys(results).length; }
+
+// ═══════════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function goTo(screenId){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screenId).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goToList(){ renderList(); goTo('list'); }
+function goToResults(){ renderResults(); goTo('results'); }
+
+function goTo_welcome(){
+  updateWelcome();
+  goTo('welcome');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  WELCOME SCREEN
+// ═══════════════════════════════════════════════════════════
+function updateWelcome(){
+  const {pts} = totalScore();
+  const done = answeredCount();
+  const pct = Math.round(pts/92*100);
+  document.getElementById('welcomeScore').textContent = pts;
+  document.getElementById('wStatDone').textContent = done+'/14';
+  document.getElementById('wStatPct').textContent = pct+'%';
+  document.getElementById('wStatTries').textContent = tries;
+  // Ring
+  const circ = 2*Math.PI*64;
+  const fill = (pts/92)*circ;
+  document.getElementById('welcomeRing').setAttribute('stroke-dasharray', fill+' '+(circ-fill));
+  const color = pct>=80?'#39d353':pct>=50?'#f0b429':'#f85149';
+  document.getElementById('welcomeRing').setAttribute('stroke', color);
+  if(done>0) document.getElementById('historyLabel').textContent = `Dernière session : ${pts}/92 pts`;
+}
+
+function goTo_list_from_welcome(){ updateWelcome(); goToList(); }
+
+// ═══════════════════════════════════════════════════════════
+//  LIST SCREEN
+// ═══════════════════════════════════════════════════════════
+function renderList(){
+  const {pts} = totalScore();
+  const done = answeredCount();
+  document.getElementById('topScore').textContent = pts+' / 92';
+  document.getElementById('listSubtitle').textContent = done+'/14 questions répondues • '+pts+'/92 pts';
+  document.getElementById('listProgress').style.width = (done/14*100)+'%';
+
+  const container = document.getElementById('questionList');
+  container.innerHTML = '';
+
+  let lastLivret = 0;
+  QUESTIONS.forEach(q=>{
+    if(q.livret !== lastLivret){
+      lastLivret = q.livret;
+      const div = document.createElement('div');
+      div.className = 'livret-div';
+      div.innerHTML = `<div class="livret-div-icon">${q.livret===1?'📖':'📗'}</div><div class="livret-div-text"><h3>Livret ${q.livret}</h3><p>${q.livret===1?'Questions 1–12 · 74 pts · 100 min':'Questions 13–14 · 18 pts · 50 min'}</p></div>`;
+      container.appendChild(div);
+    }
+
+    const r = results[q.id];
+    const pct = r ? Math.round(r.pts/r.max*100) : null;
+    const statusClass = r ? (pct>=80?'done-ok':pct>=50?'done-partial':'done-bad') : '';
+    const itemClass = r ? (pct>=80?'answered-ok':'answered-bad') : '';
+    const icon = r ? (pct>=80?'✓':pct>=50?'~':'✗') : '·';
+
+    const el = document.createElement('div');
+    el.className = `q-item ${itemClass}`;
+    el.onclick = ()=> openQuestion(q.id);
+    el.innerHTML = `
+      <div class="q-item-left">
+        <div class="q-item-num">${q.num} — Livret ${q.livret}</div>
+        <div class="q-item-title">${q.title}</div>
+        <div class="q-item-pts">/${q.pts} pts${r?' — obtenu : '+r.pts+'/'+r.max:''}</div>
+      </div>
+      <div class="q-item-right">
+        <div class="q-status-dot ${statusClass}">${icon}</div>
+        ${r?`<div class="q-item-score" style="color:${pct>=80?'var(--green)':pct>=50?'var(--amber)':'var(--red)'}">${r.pts}/${r.max}</div>`:''}
+      </div>`;
+    container.appendChild(el);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+//  QUESTION SCREEN
+// ═══════════════════════════════════════════════════════════
+let currentQ = null;
+
+function openQuestion(qId){
+  currentQ = QUESTIONS.find(q=>q.id===qId);
+  if(!currentQ) return;
+  document.getElementById('qTopNum').textContent = currentQ.num+' — Livret '+currentQ.livret;
+  document.getElementById('qTopTitle').textContent = currentQ.title;
+  document.getElementById('qTopPts').textContent = '/'+currentQ.pts+' pts';
+  renderQuestion();
+  goTo('question');
+}
+
+function renderQuestion(){
+  const q = currentQ;
+  const container = document.getElementById('qContent');
+  container.innerHTML = '';
+
+  // Context
+  if(q.context){
+    const ctx = document.createElement('div');
+    ctx.className = 'ctx-box';
+    ctx.innerHTML = `<div class="ctx-label">📋 Contexte</div>${q.context}`;
+    container.appendChild(ctx);
+  }
+
+  // Sub-questions
+  q.subqs.forEach(sq=>{
+    const div = document.createElement('div');
+    div.className = 'sub-q';
+    div.id = 'subq-'+sq.id;
+    let html = `<div class="sub-q-label">Item ${sq.id} — ${sq.label}</div>`;
+    html += `<div class="sub-q-text">${sq.instruction}</div>`;
+    if(sq.hint) html += `<div class="sub-q-hint">${sq.hint}</div>`;
+
+    // Render input based on type
+    html += renderInput(sq, q);
+
+    div.innerHTML = html;
+    container.appendChild(div);
+
+    // Feedback panel
+    const fb = document.createElement('div');
+    fb.className = 'feedback-panel';
+    fb.id = 'fb-'+sq.id;
+    container.appendChild(fb);
+  });
+
+  // Verify button
+  const btnWrap = document.createElement('div');
+  btnWrap.innerHTML = `
+    <button class="btn-verify" id="btnVerify" onclick="verifyAll()">✅ Vérifier mes réponses</button>
+    <button class="btn-next show" id="btnNext" onclick="nextQ()" style="${results[q.id]?'':'display:none'}"">Question suivante →</button>
+  `;
+  container.appendChild(btnWrap);
+
+  // Reattach TF listeners after render
+  attachTFListeners(q);
+
+  // If already answered, show feedback
+  if(results[q.id]) showSavedFeedback(q);
+}
+
+function renderInput(sq, q){
+  switch(sq.type){
+    case 'table-fill': return renderTableFill(sq);
+    case 'radio': return renderRadio(sq);
+    case 'checkbox': return renderCheckbox(sq);
+    case 'tf': return renderTF(sq, q);
+    case 'tf4': return renderTF4(sq, q);
+    case 'draw': return renderDraw(sq);
+    case 'multi-text': return renderMultiText(sq);
+    case 'single-text': return renderSingleText(sq);
+    case 'sentence-fill': return renderSingleText(sq);
+    case 'open-keywords': return renderOpenKeywords(sq);
+    case 'table-tech': return renderTableTech(sq);
+    case 'table-hh': return renderTableHH(sq);
+    case 'chain': return renderChain(sq);
+    case 'radio-plus-open': return renderRadioPlusOpen(sq);
+    case 'exp-table': return renderExpTable(sq);
+    case 'ordering': return renderOrdering(sq);
+    case 'radio2': return renderRadio2(sq);
+    default: return '<p style="color:var(--text-muted)">Type de question non géré</p>';
+  }
+}
+
+function renderTableFill(sq){
+  let h = '<table class="data-table"><thead><tr><th>Émetteur</th><th>Forme d\'énergie</th><th>Récepteur</th></tr></thead><tbody>';
+  sq.rows.forEach(r=>{
+    h += '<tr>';
+    h += `<td>${r.emetteur}</td>`;
+    if(r.energie===null) h += `<td>Énergie <input type="text" id="${r.field}" placeholder="?" oninput="setVal('${r.field}',this.value)"></td>`;
+    else h += `<td>Énergie ${r.energie}</td>`;
+    if(r.recepteur===null) h += `<td><input type="text" id="${r.field}" placeholder="Récepteur ?" oninput="setVal('${r.field}',this.value)"></td>`;
+    else h += `<td>${r.recepteur}</td>`;
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderRadio(sq){
+  let h = '<div class="opt-list">';
+  sq.options.forEach(o=>{
+    const sel = state[sq.field]===o.val;
+    h += `<label class="opt ${sel?'selected':''}" id="opt-${sq.field}-${o.val}" onclick="selectOpt('${sq.field}','${o.val}','radio')">
+      <input type="radio" name="${sq.field}" ${sel?'checked':''}> ${o.txt}
+    </label>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderCheckbox(sq){
+  let h = '<div class="opt-list">';
+  const selected = state[sq.field]||[];
+  sq.options.forEach(o=>{
+    const sel = selected.includes(o.val);
+    h += `<label class="opt ${sel?'cb-selected':''}" id="opt-${sq.field}-${o.val}" onclick="selectOpt('${sq.field}','${o.val}','checkbox')">
+      <input type="checkbox" ${sel?'checked':''}> ${o.txt}
+    </label>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderTF(sq, q){
+  let h = '<div class="tf-list" id="tf-'+sq.field+'">';
+  sq.statements.forEach((st,i)=>{
+    const cur = (tfState[sq.field]||[])[i];
+    h += `<div class="tf-row" id="tfrow-${sq.field}-${i}">
+      <div class="tf-text">${st.txt}</div>
+      <div class="tf-btns">
+        <button class="tf-btn ${cur==='V'?'sel-v':''}" id="tfbtn-${sq.field}-${i}-V" onclick="selectTF('${sq.field}',${i},'V')">VRAI</button>
+        <button class="tf-btn ${cur==='F'?'sel-f':''}" id="tfbtn-${sq.field}-${i}-F" onclick="selectTF('${sq.field}',${i},'F')">FAUX</button>
+      </div>
+    </div>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderTF4(sq, q){
+  let h = '<div class="tf-list" id="tf4-'+sq.field+'">';
+  sq.rows.forEach((r,i)=>{
+    const cur = (tfState[sq.field]||{})[i];
+    h += `<div class="tf-row" id="tf4row-${sq.field}-${i}">
+      <div class="tf-text"><strong>${r.label}</strong></div>
+      <div class="tf-btns">
+        <button class="tf-btn ${cur==='oui'?'sel-v':''}" id="tf4btn-${sq.field}-${i}-oui" onclick="selectTF4('${sq.field}',${i},'oui')">✓ Restent</button>
+        <button class="tf-btn ${cur==='non'?'sel-f':''}" id="tf4btn-${sq.field}-${i}-non" onclick="selectTF4('${sq.field}',${i},'non')">✗ Ne restent pas</button>
+      </div>
+    </div>`;
+  });
+  h += '</div>';
+  return h;
+}
+
+function renderDraw(sq){
+  let h = '<div class="draw-box"><div class="draw-icon">✏️</div><div class="draw-txt">';
+  h += '<strong>À faire sur papier !</strong><br>';
+  sq.drawGuide.forEach(g=>{ h += g+'<br>'; });
+  h += '</div></div>';
+  return h;
+}
+
+function renderMultiText(sq){
+  let h = '';
+  sq.fields.forEach(f=>{
+    const val = state[f.id]||'';
+    h += `<div style="margin-bottom:8px"><div style="font-size:12px;color:var(--text-muted);margin-bottom:4px">${f.label}</div>
+    <input type="text" class="txt-input" id="${f.id}" placeholder="${f.placeholder}" value="${val}" oninput="setVal('${f.id}',this.value)">
+    </div>`;
+  });
+  return h;
+}
+
+function renderSingleText(sq){
+  const val = state[sq.field]||'';
+  return `<textarea class="txt-input" id="${sq.field}" placeholder="${sq.placeholder}" oninput="setVal('${sq.field}',this.value)">${val}</textarea>`;
+}
+
+function renderOpenKeywords(sq){
+  const val = state[sq.field]||'';
+  return `<textarea class="txt-input" id="${sq.field}" placeholder="${sq.placeholder}" style="min-height:100px" oninput="setVal('${sq.field}',this.value)">${val}</textarea>`;
+}
+
+function renderTableTech(sq){
+  let h = '<table class="data-table"><thead><tr><th>Étape</th><th>Technique de séparation</th></tr></thead><tbody>';
+  sq.rows.forEach(r=>{
+    const val = state[r.field]||'';
+    h += `<tr><td>${r.etape}</td><td><input type="text" id="${r.field}" placeholder="Technique..." value="${val}" oninput="setVal('${r.field}',this.value)"></td></tr>`;
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderTableHH(sq){
+  let h = '<table class="data-table"><thead><tr><th>Substance</th><th>Homogène</th><th>Hétérogène</th></tr></thead><tbody>';
+  sq.rows.forEach(r=>{
+    const cur = state[r.field];
+    h += `<tr>
+      <td>${r.substance}</td>
+      <td style="text-align:center"><input type="radio" name="${r.field}" value="H" ${cur==='H'?'checked':''} onchange="setVal('${r.field}','H')"></td>
+      <td style="text-align:center"><input type="radio" name="${r.field}" value="He" ${cur==='He'?'checked':''} onchange="setVal('${r.field}','He')"></td>
+    </tr>`;
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderChain(sq){
+  let h = '<div class="chain-wrap">';
+  h += '<div class="chain-row">';
+  ['c1','c2','c3'].forEach((f,i)=>{
+    if(i>0) h += '<div class="chain-arrow">→</div>';
+    h += `<input type="text" class="chain-input" id="${f}" placeholder="Maillon ${i+1}" value="${state[f]||''}" oninput="setVal('${f}',this.value)">`;
+  });
+  h += '</div><div class="chain-row">';
+  h += '<div class="chain-arrow" style="margin-left:30px">→</div>';
+  ['c4','c5','c6'].forEach((f,i)=>{
+    if(i>0) h += '<div class="chain-arrow">→</div>';
+    h += `<input type="text" class="chain-input" id="${f}" placeholder="Maillon ${i+4}" value="${state[f]||''}" oninput="setVal('${f}',this.value)">`;
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function renderRadioPlusOpen(sq){
+  let h = renderRadio(sq);
+  const val = state[sq.openField]||'';
+  h += `<div style="margin-top:14px"><div class="sub-q-text">${sq.openInstruction}</div>`;
+  h += `<textarea class="txt-input" id="${sq.openField}" placeholder="${sq.openPlaceholder}" style="min-height:90px;margin-top:8px" oninput="setVal('${sq.openField}',this.value)">${val}</textarea></div>`;
+  return h;
+}
+
+function renderExpTable(sq){
+  let h = `<table class="data-table"><thead><tr><th>Nom de la variable</th><th>Unité</th><th colspan="5">Valeurs →</th></tr></thead><tbody>`;
+  sq.rows.forEach((r,ri)=>{
+    const vf = sq.valFields[ri];
+    h += `<tr><td><input type="text" id="${r.field1}" placeholder="${r.ph1}" value="${state[r.field1]||''}" oninput="setVal('${r.field1}',this.value)"></td>`;
+    h += `<td><input type="text" id="${r.field2}" placeholder="${r.ph2}" style="width:60px" value="${state[r.field2]||''}" oninput="setVal('${r.field2}',this.value)"></td>`;
+    vf.forEach(vfk=>{
+      h += `<td><input type="text" id="${vfk}" placeholder="?" style="width:45px" value="${state[vfk]||''}" oninput="setVal('${vfk}',this.value)"></td>`;
+    });
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderOrdering(sq){
+  let h = '<table class="data-table"><thead><tr><th style="width:100px">Numéro d\'ordre</th><th>Étape</th></tr></thead><tbody>';
+  sq.rows.forEach(r=>{
+    const val = state[r.field]||'';
+    h += `<tr><td><input type="text" id="${r.field}" placeholder="N°..." style="width:70px;text-align:center;font-family:Space Mono" value="${val}" oninput="setVal('${r.field}',this.value)"></td><td style="font-size:13px">${r.txt}</td></tr>`;
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function renderRadio2(sq){
+  let h = '';
+  sq.fields.forEach(f=>{
+    h += `<div style="margin-bottom:14px"><div class="sub-q-text" style="font-size:13px;margin-bottom:8px">${f.question}</div><div class="opt-list" style="flex-direction:row;flex-wrap:wrap;gap:8px">`;
+    f.options.forEach(o=>{
+      const sel = state[f.field]===o.val;
+      h += `<label class="opt ${sel?'selected':''}" style="flex:1;min-width:100px" id="opt-${f.field}-${o.val}" onclick="selectOpt('${f.field}','${o.val}','radio')">${o.txt}</label>`;
+    });
+    h += '</div></div>';
+  });
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════════════════════════
+function setVal(field, val){
+  state[field] = val;
+  save();
+}
+
+function selectOpt(field, val, type){
+  if(type==='radio'){
+    state[field] = val;
+    document.querySelectorAll(`[id^="opt-${field}-"]`).forEach(el=>{
+      el.classList.remove('selected');
+      const inp = el.querySelector('input');
+      if(inp) inp.checked = false;
+    });
+    const sel = document.getElementById(`opt-${field}-${val}`);
+    if(sel){ sel.classList.add('selected'); const inp=sel.querySelector('input'); if(inp) inp.checked=true; }
+  } else {
+    if(!state[field]) state[field] = [];
+    const arr = state[field];
+    const idx = arr.indexOf(val);
+    if(idx>-1) arr.splice(idx,1); else arr.push(val);
+    const el = document.getElementById(`opt-${field}-${val}`);
+    if(el){ if(arr.includes(val)) el.classList.add('cb-selected'); else el.classList.remove('cb-selected'); }
+    const inp = el && el.querySelector('input');
+    if(inp) inp.checked = arr.includes(val);
+  }
+  save();
+}
+
+function selectTF(field, idx, val){
+  if(!tfState[field]) tfState[field] = [];
+  tfState[field][idx] = val;
+  // Update UI
+  ['V','F'].forEach(v=>{
+    const btn = document.getElementById(`tfbtn-${field}-${idx}-${v}`);
+    if(btn){ btn.classList.remove('sel-v','sel-f'); if(v===val) btn.classList.add(v==='V'?'sel-v':'sel-f'); }
+  });
+  state[field] = tfState[field];
+  save();
+}
+
+function selectTF4(field, idx, val){
+  if(!tfState[field]) tfState[field] = {};
+  tfState[field][idx] = val;
+  ['oui','non'].forEach(v=>{
+    const btn = document.getElementById(`tf4btn-${field}-${idx}-${v}`);
+    if(btn){ btn.classList.remove('sel-v','sel-f'); if(v===val) btn.classList.add(v==='oui'?'sel-v':'sel-f'); }
+  });
+  state[field] = tfState[field];
+  save();
+}
+
+function attachTFListeners(q){}
+
+// ═══════════════════════════════════════════════════════════
+//  VERIFY
+// ═══════════════════════════════════════════════════════════
+function verifyAll(){
+  const q = currentQ;
+  if(!q) return;
+
+  let totalPts=0, totalMax=0;
+  const subResults = [];
+
+  q.subqs.forEach(sq=>{
+    const res = sq.check(state);
+    totalPts += res.pts;
+    totalMax += res.max;
+    subResults.push({id:sq.id, pts:res.pts, max:res.max});
+
+    // Show feedback
+    showFeedbackPanel(sq, res);
+  });
+
+  results[q.id] = {pts:totalPts, max:totalMax, subResults};
+  tries = Math.max(tries, 1);
+  save();
+
+  // Update topbar
+  const {pts} = totalScore();
+  document.getElementById('topScore').textContent = pts+' / 92';
+
+  // Show next button
+  const btnNext = document.getElementById('btnNext');
+  if(btnNext) { btnNext.style.display='flex'; }
+
+  // Disable verify
+  const btnV = document.getElementById('btnVerify');
+  if(btnV) { btnV.textContent = '🔄 Revérifier'; }
+
+  // Scroll to first feedback
+  setTimeout(()=>{ const fb=document.querySelector('.feedback-panel.show'); if(fb) fb.scrollIntoView({behavior:'smooth',block:'nearest'}); },100);
+}
+
+function showFeedbackPanel(sq, res){
+  const panel = document.getElementById('fb-'+sq.id);
+  if(!panel) return;
+
+  const pct = Math.round(res.pts/res.max*100);
+  const emoji = res.manual ? '✏️' : pct>=80 ? '🎉' : pct>=50 ? '💪' : '🔍';
+  const title = res.manual ? 'À corriger sur papier' : pct>=80 ? 'Parfait !' : pct>=50 ? 'Pas mal !' : 'À retravailler';
+  const ptClass = pct>=80?'ok':pct>=50?'partial':'bad';
+
+  let fbHTML = `<div class="feedback-header">
+    <div class="feedback-emoji">${emoji}</div>
+    <div class="feedback-title-text">${title}</div>
+    <div class="feedback-pts ${ptClass}">${res.pts}/${res.max}</div>
+  </div><div class="feedback-body">`;
+
+  (res.fb||[]).forEach(item=>{
+    const icon = item.ok===true?'✅':item.ok===false?'❌':'📝';
+    fbHTML += `<div class="fb-item"><div class="fb-icon">${icon}</div><div class="fb-text">${item.txt}</div></div>`;
+  });
+
+  if(sq.lesson){
+    fbHTML += `<div class="lesson-box"><div class="lesson-title">💡 À retenir</div>${sq.lesson}</div>`;
+  }
+  fbHTML += '</div>';
+
+  panel.innerHTML = fbHTML;
+  panel.classList.add('show');
+}
+
+function showSavedFeedback(q){
+  q.subqs.forEach(sq=>{
+    const subR = (results[q.id].subResults||[]).find(r=>r.id===sq.id);
+    if(subR){
+      const res = sq.check(state);
+      showFeedbackPanel(sq, res);
+    }
+  });
+  const btnV = document.getElementById('btnVerify');
+  if(btnV) btnV.textContent = '🔄 Revérifier';
+  const btnNext = document.getElementById('btnNext');
+  if(btnNext) btnNext.style.display='flex';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  NAVIGATION HELPERS
+// ═══════════════════════════════════════════════════════════
+function nextQ(){
+  const idx = QUESTIONS.findIndex(q=>q.id===currentQ.id);
+  const next = QUESTIONS[idx+1];
+  if(next) openQuestion(next.id); else goToResults();
+}
+
+function goTo(screenId){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+screenId).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goToList(){ renderList(); goTo('list'); }
+
+// ═══════════════════════════════════════════════════════════
+//  RESULTS SCREEN
+// ═══════════════════════════════════════════════════════════
+function renderResults(){
+  const {pts} = totalScore();
+  const pct = Math.round(pts/92*100);
+  document.getElementById('resScore').textContent = pts;
+  document.getElementById('resPct').textContent = pct+'%';
+
+  // Ring
+  const circ = 2*Math.PI*72;
+  const fill = (pts/92)*circ;
+  document.getElementById('resRingFill').setAttribute('stroke-dasharray', fill+' '+(circ-fill));
+  const color = pct>=80?'#39d353':pct>=50?'#f0b429':'#f85149';
+  document.getElementById('resRingFill').setAttribute('stroke',color);
+  document.getElementById('resPct').style.color = color;
+
+  let emoji,title,msg;
+  if(pct>=80){emoji='🏆';title='Bravo Marius !';msg='Score excellent ! Tu es clairement prêt pour le vrai CE1D 2026. Continue comme ça !';}
+  else if(pct>=65){emoji='💪';title='Très bon travail !';msg='Tu maîtrises bien le programme. Revois les points ratés et tu seras au top !';}
+  else if(pct>=50){emoji='📈';title='Réussite atteinte !';msg='Tu dépasses le seuil (50%). Mais vise plus haut pour être à l\'aise le jour J !';}
+  else if(pct>=35){emoji='📚';title='Encore un effort !';msg='Relis bien les corrections, comprends chaque erreur. Tu y arriveras !';}
+  else{emoji='🌱';title='Il faut réviser !';msg='Relis tes notes de cours, puis retente. Chaque erreur ici = une erreur évitée au CE1D !';}
+
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resSub').textContent=`Score : ${pts}/92 (${pct}%) — Seuil de réussite : 46/92 (50%)`;
+  document.getElementById('resMsg').textContent=msg;
+
+  // Breakdown
+  const bd = document.getElementById('resBreakdown');
+  bd.innerHTML = '<div style="font-family:Space Mono;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Détail par question</div>';
+  QUESTIONS.forEach(q=>{
+    const r = results[q.id];
+    const color = !r?'var(--text-dim)':r.pts/r.max>=0.8?'var(--green)':r.pts/r.max>=0.5?'var(--amber)':'var(--red)';
+    const el = document.createElement('div');
+    el.className='rb-row';
+    el.innerHTML=`<div class="rb-name">${q.num} — ${q.title.substring(0,35)}...</div><div class="rb-score" style="color:${color}">${r?r.pts+'/'+r.max:'—/'+q.pts}</div>`;
+    el.onclick=()=>openQuestion(q.id);
+    el.style.cursor='pointer';
+    bd.appendChild(el);
+  });
+}
+
+function resetAndRestart(){
+  results = {};
+  state = {};
+  tfState = {};
+  tries++;
+  save();
+  goToList();
+}
+
+// ═══════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════
+window.goTo = goTo;
+window.goToList = goToList;
+window.goToResults = ()=>{ renderResults(); goTo('results'); };
+window.goTo_welcome = ()=>{ updateWelcome(); goTo('welcome'); };
+
+document.querySelector('.btn-primary').addEventListener('click', ()=>{
+  goToList();
+});
+
+load();
+updateWelcome();
+</script>
+</body>
+</html>
