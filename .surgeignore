@@ -1,5 +1,0 @@
-# Fichiers exclus du déploiement public
-.git
-.gitignore
-*.md
-catalog.json
