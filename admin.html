@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHIMSCO — Relève achats vêtements 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0a6b6f;
+  --teal-deep: #064548;
+  --teal-soft: #d7eef0;
+  --ink: #1a2426;
+  --muted: #5a6a6d;
+  --line: #c9d6d8;
+  --paper: #f3f7f6;
+  --ok: #157a3d;
+  --ok-bg: #e8f8ee;
+  --warn: #b45309;
+  --warn-bg: #fff7ed;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --shadow: 0 18px 50px rgba(6, 69, 72, 0.12);
+  --radius: 18px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1000px 420px at 0% 0%, #b9e3e0 0%, transparent 55%),
+    linear-gradient(180deg, var(--paper), #eef4f2 50%, #f7f5f0 100%);
+  min-height: 100vh;
+  line-height: 1.45;
+}
+button, input { font: inherit; }
+button { cursor: pointer; border: none; background: none; }
+.app { max-width: 920px; margin: 0 auto; padding: 20px 16px 60px; }
+
+.top {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  margin-bottom: 18px; flex-wrap: wrap;
+}
+.brand {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.6rem;
+  letter-spacing: -.03em; color: var(--teal-deep);
+}
+.brand span { display: block; font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.link { color: var(--teal); font-weight: 700; text-decoration: none; }
+.link:hover { text-decoration: underline; }
+
+.card {
+  background: rgba(255,255,255,.86);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.card h1, .card h2 { font-family: 'Syne', sans-serif; margin-bottom: 8px; }
+.lead { color: var(--muted); margin-bottom: 16px; }
+
+.field { margin-bottom: 12px; }
+.field label {
+  display: block; font-size: .78rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 6px;
+}
+.field input {
+  width: 100%; min-height: 48px; border: 2px solid #b7cbce; border-radius: 14px;
+  padding: 12px 14px; background: #fff; outline: none;
+}
+.field input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(10,107,111,.12); }
+
+.btn {
+  min-height: 48px; padding: 12px 18px; border-radius: 14px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary { background: var(--teal); color: #fff; }
+.btn-primary:hover { background: var(--teal-deep); }
+.btn-ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1.5px solid #fecdca; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;
+}
+.stat {
+  background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 14px;
+  text-align: center;
+}
+.stat strong { display: block; font-size: 1.45rem; font-variant-numeric: tabular-nums; color: var(--teal-deep); }
+.stat span { font-size: .82rem; color: var(--muted); font-weight: 600; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab {
+  padding: 10px 14px; border-radius: 999px; border: 1.5px solid var(--line);
+  background: #fff; font-weight: 700; color: var(--muted);
+}
+.tab.on { background: var(--teal-deep); color: #fff; border-color: var(--teal-deep); }
+
+.order {
+  border: 1.5px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 10px; background: #fff;
+}
+.order-head {
+  display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; flex-wrap: wrap;
+}
+.order-head h3 { font-size: 1.05rem; }
+.meta { color: var(--muted); font-size: .88rem; margin-top: 2px; }
+.badge {
+  display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .78rem; font-weight: 700;
+  background: var(--teal-soft); color: var(--teal-deep);
+}
+.items { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.item-line {
+  display: grid; grid-template-columns: 1fr auto; gap: 6px 12px;
+  padding: 6px 0; font-size: .95rem;
+}
+.item-line .sub { color: var(--muted); font-size: .85rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+tfoot td { font-weight: 800; border-top: 2px solid var(--ink); border-bottom: none; }
+
+.alert {
+  padding: 12px 14px; border-radius: 12px; margin: 10px 0; font-weight: 600; font-size: .95rem;
+}
+.alert.err { background: var(--danger-bg); color: var(--danger); }
+.alert.ok { background: var(--ok-bg); color: var(--ok); }
+.alert.info { background: var(--teal-soft); color: var(--teal-deep); }
+.alert.warn { background: var(--warn-bg); color: #9a3412; }
+
+.hidden { display: none !important; }
+.empty { text-align: center; padding: 28px 12px; color: var(--muted); }
+
+@media (max-width: 640px) {
+  .stats { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <div class="brand">CHIMSCO<span>Relève achats · Vêtements 2026</span></div>
+    <a class="link" href="index.html">← Formulaire personnel</a>
+  </div>
+
+  <!-- LOGIN -->
+  <section class="card" id="loginView">
+    <h1>Accès responsable des achats</h1>
+    <p class="lead">Consultez la relève des commandes du personnel, le total par article, et exportez le listing.</p>
+    <div class="field">
+      <label for="pin">Code d’accès</label>
+      <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Code achats">
+    </div>
+    <div id="loginError" class="alert err hidden">Code incorrect.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="loginBtn" style="flex:1">Ouvrir la relève</button>
+    </div>
+    <p class="meta" style="margin-top:14px">Code par défaut : <strong>achats2026</strong> — changez-le après la première connexion.</p>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="dashView" class="hidden">
+    <div class="stats">
+      <div class="stat"><strong id="statCount">0</strong><span>Commandes</span></div>
+      <div class="stat"><strong id="statPeople">0</strong><span>Personnes</span></div>
+      <div class="stat"><strong id="statTotal">0 €</strong><span>Total articles</span></div>
+    </div>
+
+    <div class="card">
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-primary" id="refreshBtn">Actualiser</button>
+        <button class="btn btn-ghost" id="exportCsvBtn">Exporter CSV</button>
+        <button class="btn btn-ghost" id="exportConsoBtn">Bon de commande CSV</button>
+        <button class="btn btn-ghost" id="mailtoAllBtn">E-mail récap</button>
+        <button class="btn btn-ghost" id="changePinBtn">Changer le code</button>
+        <button class="btn btn-ghost" id="logoutBtn">Quitter</button>
+      </div>
+      <div id="statusMsg" class="alert info hidden" style="margin-top:12px"></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab on" data-tab="orders">Commandes</button>
+      <button class="tab" data-tab="conso">Relève articles</button>
+    </div>
+
+    <div id="tabOrders" class="card">
+      <h2>Listing des commandes</h2>
+      <p class="lead">Chaque envoi du personnel apparaît ici automatiquement.</p>
+      <div id="ordersList"></div>
+    </div>
+
+    <div id="tabConso" class="card hidden">
+      <h2>Relève consolidée (achats)</h2>
+      <p class="lead">Quantités à commander par article et par taille — prêt pour le fournisseur.</p>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr><th>Article</th><th>Taille</th><th>Qté</th><th>Prix u.</th><th>Total</th></tr>
+          </thead>
+          <tbody id="consoBody"></tbody>
+          <tfoot>
+            <tr><td colspan="4">Total général</td><td id="consoTotal">0 €</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="store.js"></script>
+<script>
+const euro = (n) => new Intl.NumberFormat("fr-BE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n || 0);
+const SESSION_KEY = "chimsco-achats-session";
+
+let orders = [];
+
+function showStatus(msg, type = "info") {
+  const el = document.getElementById("statusMsg");
+  el.className = "alert " + type;
+  el.textContent = msg;
+  el.classList.remove("hidden");
+  setTimeout(() => el.classList.add("hidden"), 4000);
+}
+
+function isLogged() {
+  return sessionStorage.getItem(SESSION_KEY) === "1";
+}
+
+function setLogged(v) {
+  if (v) sessionStorage.setItem(SESSION_KEY, "1");
+  else sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById("loginView").classList.toggle("hidden", v);
+  document.getElementById("dashView").classList.toggle("hidden", !v);
+}
+
+async function refresh() {
+  const btn = document.getElementById("refreshBtn");
+  btn.disabled = true;
+  btn.textContent = "Chargement…";
+  try {
+    orders = await ChimscoStore.listOrders();
+    renderAll();
+    showStatus(orders.length + " commande(s) chargée(s).", "ok");
+  } catch (e) {
+    showStatus("Erreur de chargement : " + e.message, "err");
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Actualiser";
+  }
+}
+
+function renderAll() {
+  document.getElementById("statCount").textContent = String(orders.length);
+  const people = new Set(orders.map(o => `${(o.nom||"").toUpperCase()}|${(o.prenom||"").toLowerCase()}`));
+  document.getElementById("statPeople").textContent = String(people.size);
+  const total = orders.reduce((s, o) => s + (Number(o.total) || 0), 0);
+  document.getElementById("statTotal").textContent = euro(total);
+
+  const list = document.getElementById("ordersList");
+  if (!orders.length) {
+    list.innerHTML = `<div class="empty">Aucune commande pour le moment.<br>Dès qu’un collaborateur valide le formulaire, elle apparaît ici.</div>`;
+  } else {
+    list.innerHTML = orders.map(o => {
+      const when = o.createdAt ? new Date(o.createdAt).toLocaleString("fr-BE") : "—";
+      const items = (o.items || []).map(i => `
+        <div class="item-line">
+          <div><strong>${esc(i.name)}</strong><div class="sub">Taille ${esc(i.size)}${i.custom ? " · " + esc(i.custom) : ""} · Qté ${i.qty}</div></div>
+          <div>${i.price === 0 ? "Fourni" : euro((i.price || 0) * (i.qty || 0))}</div>
+        </div>`).join("");
+      return `<article class="order" data-id="${esc(o.id)}">
+        <div class="order-head">
+          <div>
+            <h3>${esc(o.prenom || "")} ${esc((o.nom || "").toUpperCase())}</h3>
+            <div class="meta">${esc(when)}</div>
+          </div>
+          <div style="text-align:right">
+            <span class="badge">${euro(o.total || 0)}</span>
+            <div class="btn-row" style="justify-content:flex-end;margin-top:8px">
+              <button class="btn btn-danger" data-del="${esc(o.id)}" style="min-height:36px;padding:6px 12px;font-size:.85rem">Supprimer</button>
+            </div>
+          </div>
+        </div>
+        <div class="items">${items || "<div class='meta'>Aucun article</div>"}</div>
+      </article>`;
+    }).join("");
+  }
+
+  // Consolidation article × taille
+  const map = new Map();
+  for (const o of orders) {
+    for (const i of (o.items || [])) {
+      const size = i.custom ? `${i.size} (${i.custom})` : i.size;
+      const key = `${i.name}||${size}`;
+      const cur = map.get(key) || { name: i.name, size, qty: 0, price: i.price || 0 };
+      cur.qty += Number(i.qty) || 0;
+      map.set(key, cur);
+    }
+  }
+  const rows = [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "fr") || String(a.size).localeCompare(String(b.size), "fr"));
+  const body = document.getElementById("consoBody");
+  body.innerHTML = rows.map(r => `
+    <tr>
+      <td>${esc(r.name)}</td>
+      <td>${esc(r.size)}</td>
+      <td><strong>${r.qty}</strong></td>
+      <td>${r.price === 0 ? "Fourni" : euro(r.price)}</td>
+      <td>${r.price === 0 ? "—" : euro(r.price * r.qty)}</td>
+    </tr>`).join("") || `<tr><td colspan="5" class="empty">Pas encore d’articles.</td></tr>`;
+  const consoTotal = rows.reduce((s, r) => s + (r.price || 0) * (r.qty || 0), 0);
+  document.getElementById("consoTotal").textContent = euro(consoTotal);
+}
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;" }[c]));
+}
+
+function download(filename, text) {
+  const blob = new Blob(["\uFEFF" + text], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function exportOrdersCsv() {
+  const lines = [["Date", "Nom", "Prénom", "Article", "Taille", "Quantité", "Prix unitaire", "Ligne", "Total commande"].join(";")];
+  for (const o of orders) {
+    const date = o.createdAt ? new Date(o.createdAt).toLocaleString("fr-BE") : "";
+    for (const i of (o.items || [])) {
+      const size = i.custom ? `${i.size} (${i.custom})` : i.size;
+      lines.push([
+        date, o.nom || "", o.prenom || "", i.name || "", size,
+        i.qty || 0, i.price || 0, (i.price || 0) * (i.qty || 0), o.total || 0
+      ].map(csvCell).join(";"));
+    }
+  }
+  download(`chimsco-commandes-vetements-${dateStamp()}.csv`, lines.join("\n"));
+}
+
+function exportConsoCsv() {
+  const map = new Map();
+  for (const o of orders) {
+    for (const i of (o.items || [])) {
+      const size = i.custom ? `${i.size} (${i.custom})` : i.size;
+      const key = `${i.name}||${size}`;
+      const cur = map.get(key) || { name: i.name, size, qty: 0, price: i.price || 0 };
+      cur.qty += Number(i.qty) || 0;
+      map.set(key, cur);
+    }
+  }
+  const lines = [["Article", "Taille", "Quantité totale", "Prix unitaire", "Total"].join(";")];
+  for (const r of [...map.values()].sort((a, b) => a.name.localeCompare(b.name, "fr"))) {
+    lines.push([r.name, r.size, r.qty, r.price, r.price * r.qty].map(csvCell).join(";"));
+  }
+  download(`chimsco-bon-commande-${dateStamp()}.csv`, lines.join("\n"));
+}
+
+function csvCell(v) {
+  const s = String(v ?? "");
+  return /[;"\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function dateStamp() {
+  const d = new Date();
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function buildMailRecap() {
+  const lines = [
+    "RELÈVE COMMANDES VÊTEMENTS CHIMSCO 2026",
+    "======================================",
+    `Date export : ${new Date().toLocaleString("fr-BE")}`,
+    `Commandes : ${orders.length}`,
+    `Total : ${euro(orders.reduce((s, o) => s + (o.total || 0), 0))}`,
+    "",
+    "DÉTAIL PAR PERSONNE",
+    "-------------------"
+  ];
+  for (const o of orders) {
+    lines.push(`${(o.prenom || "")} ${(o.nom || "").toUpperCase()} — ${euro(o.total || 0)}`);
+    for (const i of (o.items || [])) {
+      const size = i.custom ? `${i.size} (${i.custom})` : i.size;
+      lines.push(`  • ${i.name} | taille ${size} | qté ${i.qty}`);
+    }
+    lines.push("");
+  }
+  return lines.join("\n");
+}
+
+// Events
+document.getElementById("loginBtn").onclick = () => {
+  const pin = document.getElementById("pin").value.trim();
+  if (ChimscoStore.checkPin(pin)) {
+    document.getElementById("loginError").classList.add("hidden");
+    setLogged(true);
+    refresh();
+  } else {
+    document.getElementById("loginError").classList.remove("hidden");
+  }
+};
+document.getElementById("pin").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+document.getElementById("logoutBtn").onclick = () => setLogged(false);
+document.getElementById("refreshBtn").onclick = refresh;
+document.getElementById("exportCsvBtn").onclick = exportOrdersCsv;
+document.getElementById("exportConsoBtn").onclick = exportConsoCsv;
+document.getElementById("mailtoAllBtn").onclick = () => {
+  const subject = encodeURIComponent("Relève commandes vêtements Chimsco 2026");
+  const body = encodeURIComponent(buildMailRecap());
+  location.href = `mailto:${ChimscoStore.STORE.achatsEmail}?subject=${subject}&body=${body}`;
+};
+document.getElementById("changePinBtn").onclick = () => {
+  const next = prompt("Nouveau code d’accès achats (min. 4 caractères) :");
+  if (!next || next.trim().length < 4) return;
+  ChimscoStore.setPin(next.trim());
+  showStatus("Code modifié sur cet appareil.", "ok");
+};
+
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t === tab));
+    const name = tab.dataset.tab;
+    document.getElementById("tabOrders").classList.toggle("hidden", name !== "orders");
+    document.getElementById("tabConso").classList.toggle("hidden", name !== "conso");
+  };
+});
+
+document.getElementById("ordersList").onclick = async (e) => {
+  const btn = e.target.closest("[data-del]");
+  if (!btn) return;
+  const id = btn.dataset.del;
+  if (!confirm("Supprimer cette commande de la relève ?")) return;
+  try {
+    await ChimscoStore.deleteOrder(id);
+    orders = orders.filter(o => o.id !== id);
+    renderAll();
+    showStatus("Commande supprimée.", "ok");
+  } catch (err) {
+    showStatus(err.message, "err");
+  }
+};
+
+// Auto login if session
+if (isLogged()) {
+  setLogged(true);
+  refresh();
+}
+</script>
+</body>
+</html>

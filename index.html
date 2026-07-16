@@ -572,6 +572,9 @@ img { max-width: 100%; display: block; }
     <p>Choisissez vos articles, vos tailles et votre quantité. Le total se calcule tout seul.</p>
     <a class="hero-cta" href="#start" id="startCta">Commencer la commande →</a>
     <div class="hero-meta">Budget : 250 € · Chaussures fournies par Chimsco</div>
+    <p style="margin-top:18px;font-size:.85rem;opacity:.75;animation:rise .7s .38s ease both">
+      <a href="admin.html" style="color:#f4fffe;font-weight:700">Accès responsable des achats</a>
+    </p>
   </header>
 
   <nav class="steps" aria-label="Étapes">
@@ -658,19 +661,16 @@ img { max-width: 100%; display: block; }
         <button class="btn btn-primary" id="submitBtn">Envoyer la commande</button>
       </div>
       <p style="margin-top:12px;color:var(--muted);font-size:.88rem">
-        Un e-mail de confirmation sera préparé automatiquement. Vous pourrez aussi copier le récapitulatif.
+        La commande est enregistrée pour le responsable des achats (relève centralisée).
       </p>
     </div>
     <div class="block success" id="successBlock" hidden>
       <div class="check">✓</div>
-      <h2>Commande prête</h2>
-      <p class="lead" id="successMsg">Votre récapitulatif a été préparé.</p>
+      <h2>Commande enregistrée</h2>
+      <p class="lead" id="successMsg">Le responsable des achats a reçu votre listing.</p>
       <div class="btn-row" style="justify-content:center">
-        <button class="btn btn-primary" id="mailtoBtn">Ouvrir l’e-mail</button>
-        <button class="btn btn-ghost" id="copyBtn">Copier le récap</button>
-      </div>
-      <div class="btn-row" style="justify-content:center;margin-top:8px">
-        <a class="btn btn-ghost" id="formsLink" target="_blank" rel="noopener">Formulaire Microsoft Forms</a>
+        <button class="btn btn-ghost" id="copyBtn">Copier mon récap</button>
+        <a class="btn btn-ghost" href="index.html">Nouvelle commande</a>
       </div>
     </div>
   </section>
@@ -683,11 +683,12 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
+<script src="store.js"></script>
 <script>
 const CATALOG = {"formId":"keLDAFBPAU-AUTeAMijQ_TRNp6HOcYRJnKGvBFa_1GFURjRLU0RBQ0FCTjBaWUJMV0MwMzJNNTdUMy4u","title":"Commande vêtements - 2026","budget":250,"tenantId":"00c3e291-4f50-4f01-8051-37803228d0fd","ownerId":"a1a74d34-71ce-4984-9ca1-af0456bfd461","agreementQid":"r74561d39c5f44a389ec1505ff7e0186a","nomQid":"rdb76e73ebc734e1d9f158543a1065e44","prenomQid":"r7f051e3f45e34896a9996da62432f474","totalQid":"r4053b7ddfce749d090e8df05ac0df721","totalQid2":"r42456632164e4b1b9deee3ff58b0be5e","agreementChoice":"Je marque mon accord","products":[{"id":"r5af500eb926141218c1eecb9402d10da","name":"Bonnet Thinsulate","fullTitle":"Bonnet Thinsulate 8€","price":8,"sizes":["Taille unique"],"sizeQid":"r5af500eb926141218c1eecb9402d10da","qtyQid":"rc23a72ac228244299c631a45414d511b","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"re86491225c1a45ecbbc06cdfb729f6e2","name":"Casquette Trucker","fullTitle":"Casquette Trucker 8€","price":8,"sizes":["Taille unique"],"sizeQid":"re86491225c1a45ecbbc06cdfb729f6e2","qtyQid":"r44275353c38c4d6da738c5ae2a579b7a","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rf5bb2ed68d6f4b44be3e805fe245473c","name":"Sweat-shirt à capuche LMA Québec","fullTitle":"Sweat-shirt à capuche LMA Québec 45€","price":45,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf5bb2ed68d6f4b44be3e805fe245473c","qtyQid":"r3679625e7b5b494c93d87fba8d9dbfbd","customQid":null,"section":"obligatoire","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r79feb0967b4f4445a579118c421c2cf3","name":"Pantalon multi-poche LMA Minerai","fullTitle":"Pantalon multi-poche LMA Minerai 40€","price":40,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r79feb0967b4f4445a579118c421c2cf3","qtyQid":"r5107dbd27e1043c1877d0aca5c645d95","customQid":"r6c46ba0798ba4e54b55c8e1575165d01","section":"obligatoire","role":"pantalon","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"re9bbdbafbbd44cd29c9b57a1a78ede2a","name":"Pantalon multi-poches Snickers 6241","fullTitle":"Variante : Pantalon multi-poches Snickers 6241 80€","price":80,"sizes":["46","48","50","52","54","56","58","60","62","88","92","96","100","104","108","112","116","120","146","148","150","152","154","156","158"],"sizeQid":"re9bbdbafbbd44cd29c9b57a1a78ede2a","qtyQid":"r4560eab58c3141419e867ff315f83d84","customQid":"r99c58e39ff24406fa729dce066e20a25","section":"obligatoire","role":"pantalon","isVariant":true,"isShoe":false,"defaultQty":0},{"id":"r3e85311b75e24443860dbe323b6a6ee1","name":"Chaussures haute Lemaître Max","fullTitle":"Chaussures haute Lemaître Max","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r3e85311b75e24443860dbe323b6a6ee1","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":false,"isShoe":true,"defaultQty":1},{"id":"r0a66b3124a784f72b9b28062de1b9260","name":"Chaussures haute PUMA Conquest","fullTitle":"Variante : Chaussures haute PUMA Conquest","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r0a66b3124a784f72b9b28062de1b9260","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":true,"isShoe":true,"defaultQty":1},{"id":"r65ddfa98538140c8aed1af8ae4c2ad07","name":"Veste imperméable softshell LMA Rock","fullTitle":"Veste imperméable softshell LMA Rock 60€","price":60,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r65ddfa98538140c8aed1af8ae4c2ad07","qtyQid":"r6017db325e08417087ee18759f5f296e","customQid":null,"section":"obligatoire","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r2737942f73f74ca8976dfaf185010ed2","name":"Veste imperméable 1104 Snickers","fullTitle":"Variante : Veste imperméable 1104 Snickers 120€","price":120,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2737942f73f74ca8976dfaf185010ed2","qtyQid":"r3183b98817cf468daed5b70d50f224b3","customQid":null,"section":"obligatoire","role":"veste","isVariant":true,"isShoe":false,"defaultQty":0},{"id":"rbcf3cf89a56b4610988f8a72c77dfc03","name":"T-shirt Chimsco B&C","fullTitle":"T-shirt Chimsco B&C 8€","price":8,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rbcf3cf89a56b4610988f8a72c77dfc03","qtyQid":"r1a4b9691d133443fab384610d569e6a8","customQid":null,"section":"obligatoire","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rd4f7c3d8bafa42ae8dbf19ba7383637a","name":"Veste bi matière LMA soft","fullTitle":"Veste bi matière LMA soft 75€","price":75,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rd4f7c3d8bafa42ae8dbf19ba7383637a","qtyQid":"r1bceff8e47734235b7e24a1782e972d6","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r2d37848f6cc5484ca34649d27cc63bb0","name":"Veste légère 1304 Snickers","fullTitle":"Veste légère 1304 Snickers 110€","price":110,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2d37848f6cc5484ca34649d27cc63bb0","qtyQid":"r0144d1a1e84a40bcb6631ae6f3d181de","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rff8b5a0150184cc38a04035ad071efa1","name":"Pull polaire zippé LMA Théorème","fullTitle":"Pull polaire zippé LMA Théorème 50€","price":50,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rff8b5a0150184cc38a04035ad071efa1","qtyQid":"ra190511145d04c1d87e4e663ca8f2e0f","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"ra686a5668ee844e2b9a260f004c0b967","name":"Sweat col haut LMA Berlin","fullTitle":"Sweat col haut LMA Berlin 30€","price":30,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"ra686a5668ee844e2b9a260f004c0b967","qtyQid":"ra1ade541a00c45f691aa559d415f90a9","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rf6859452f82f45eaab9db506255d3e6a","name":"Bodywarmer LMA Sable","fullTitle":"Bodywarmer LMA Sable 40€","price":40,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf6859452f82f45eaab9db506255d3e6a","qtyQid":"rced947a798494bf898d21d5124114a43","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r1b8a3886e6c3472b9a39f833ebdca8f1","name":"Bodywarmer LMA Rebel","fullTitle":"Bodywarmer LMA Rebel 70€","price":70,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r1b8a3886e6c3472b9a39f833ebdca8f1","qtyQid":"rc81a40a4ac84489fb76647f79405aeb4","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r93fbf021627043a58bbe77bdd6e86335","name":"Bermuda LMA Sediment","fullTitle":"Bermuda LMA Sediment 35€","price":35,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r93fbf021627043a58bbe77bdd6e86335","qtyQid":"rc9f956db3e464fc99d84b9ae732a5428","customQid":"r867896ddb1a94f5d9bdc525fea61e9ae","section":"facultatif","role":"bermuda","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"ra831a01d1c3840078c1b8e6ad22fc82e","name":"Bermuda multi-poches Snickers 6141","fullTitle":"Variante : Bermuda multi-poches Snickers 6141 65€","price":65,"sizes":["44","46","48","50","52","54","56","58","60","62"],"sizeQid":"ra831a01d1c3840078c1b8e6ad22fc82e","qtyQid":"re03cedd280e9439aacd8fb94b67429cc","customQid":"rebd23b929b664fbe834b9101e2bf70ad","section":"facultatif","role":"bermuda","isVariant":true,"isShoe":false,"defaultQty":0},{"id":"ra2d6762ea9b54c82a164c5a8b464c0e5","name":"T-shirt manches longues B&C","fullTitle":"T-shirt manches longues B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"ra2d6762ea9b54c82a164c5a8b464c0e5","qtyQid":"ra4190190a09e42c1b0e3928047f59ebc","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","name":"T-shirt marcel B&C","fullTitle":"T-shirt marcel B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","qtyQid":"rf1ff6dd45ed046bc9d45dab5c396e205","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r33fd5a4b9266426e92e5a8f9cdfda992","name":"Sous-vêtements thermique en polaire LMA (haut et bas)","fullTitle":"Sous-vêtements thermique en polaire LMA (haut et bas) 25€","price":25,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r33fd5a4b9266426e92e5a8f9cdfda992","qtyQid":"r047129d4e45a4bc69178d58c14b1728e","customQid":null,"section":"facultatif","role":"thermique","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"r29852916e361461fb1e3cc441a6b369f","name":"Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement)","fullTitle":"Variante : Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement) 20€","price":20,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r29852916e361461fb1e3cc441a6b369f","qtyQid":"r98222acdef214a9586ff14d4d1d8a425","customQid":null,"section":"facultatif","role":"thermique","isVariant":true,"isShoe":false,"defaultQty":0}]};
 
 const FORMS_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=" + CATALOG.formId;
-const ORDER_EMAIL = "xavier@chimsco.be";
+const ORDER_EMAIL = (window.ChimscoStore && ChimscoStore.STORE.achatsEmail) || "xavier@chimsco.be";
 const STORAGE_KEY = "chimsco-commande-vetements-2026";
 
 const state = {
@@ -1017,6 +1018,29 @@ async function trySubmitToForms() {
   return res.json();
 }
 
+function buildOrderPayload() {
+  const items = selectedItems().map(i => ({
+    productId: i.product.id,
+    name: i.product.name,
+    size: i.size,
+    custom: i.custom || "",
+    qty: i.qty,
+    price: i.product.price,
+    line: i.line
+  }));
+  return {
+    id: crypto.randomUUID(),
+    nom: state.nom.trim(),
+    prenom: state.prenom.trim(),
+    total: total(),
+    budget: CATALOG.budget,
+    items,
+    summary: buildSummary(),
+    createdAt: new Date().toISOString(),
+    source: "chimsco-web"
+  };
+}
+
 async function submitOrder() {
   const { errors } = validateForSubmit();
   if (errors.length) { renderReview(); return; }
@@ -1029,41 +1053,59 @@ async function submitOrder() {
   state.lastSummary = summary;
   localStorage.setItem(STORAGE_KEY + "-last", summary);
 
-  let formsOk = false;
+  const order = buildOrderPayload();
+  let storeOk = false;
+  let storeErr = "";
   try {
-    await trySubmitToForms();
-    formsOk = true;
-  } catch (_) {
-    formsOk = false;
+    await ChimscoStore.saveOrder(order);
+    storeOk = true;
+  } catch (e) {
+    storeErr = e.message || "erreur réseau";
   }
+
+  // Best-effort mirror vers Microsoft Forms (si CORS le permet)
+  try { await trySubmitToForms(); } catch (_) {}
 
   document.getElementById("reviewBlock").hidden = true;
   document.getElementById("successBlock").hidden = false;
-  document.getElementById("successMsg").textContent = formsOk
-    ? "Commande enregistrée dans Microsoft Forms."
-    : "Récapitulatif prêt — envoyez-le par e-mail pour valider la commande.";
-  document.getElementById("formsLink").href = FORMS_URL;
 
-  const subject = encodeURIComponent(`Commande vêtements 2026 — ${state.prenom} ${state.nom}`);
-  const body = encodeURIComponent(summary);
-  document.getElementById("mailtoBtn").onclick = () => {
-    location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
-  };
+  if (storeOk) {
+    document.getElementById("successMsg").textContent =
+      "Commande envoyée à la relève achats. Merci !";
+    // Notifier aussi par e-mail le responsable (client mail local)
+    const subject = encodeURIComponent(`Nouvelle commande vêtements — ${state.prenom} ${state.nom}`);
+    const body = encodeURIComponent(summary + "\n\n—\nVisible aussi dans la relève : admin.html");
+    // Ouverture discrète uniquement si l'utilisateur a un client mail ; non bloquant
+    try {
+      const a = document.createElement("a");
+      a.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
+      // ne pas auto-ouvrir pour éviter double friction ; bouton retiré volontairement
+    } catch (_) {}
+  } else {
+    document.getElementById("successMsg").textContent =
+      "Enregistrement central indisponible (" + storeErr + "). Envoi par e-mail…";
+    const subject = encodeURIComponent(`Commande vêtements 2026 — ${state.prenom} ${state.nom}`);
+    const body = encodeURIComponent(summary);
+    setTimeout(() => {
+      location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
+    }, 350);
+  }
+
   document.getElementById("copyBtn").onclick = async () => {
     try {
       await navigator.clipboard.writeText(summary);
       document.getElementById("copyBtn").textContent = "Copié ✓";
-      setTimeout(() => { document.getElementById("copyBtn").textContent = "Copier le récap"; }, 1600);
+      setTimeout(() => { document.getElementById("copyBtn").textContent = "Copier mon récap"; }, 1600);
     } catch (_) {
       prompt("Copiez ce texte :", summary);
     }
   };
 
-  // Auto-open mailto if Forms blocked (typical on GitHub Pages)
-  if (!formsOk) {
-    setTimeout(() => {
-      location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
-    }, 400);
+  // Vider le panier local après succès
+  if (storeOk) {
+    state.cart = {};
+    state.startDate = new Date().toISOString();
+    save();
   }
 
   btn.disabled = false;
@@ -1113,7 +1155,6 @@ document.getElementById("agree").checked = !!state.agree;
 updateIdentityGate();
 renderCatalog();
 updateBudget();
-document.getElementById("formsLink").href = FORMS_URL;
 </script>
 </body>
 </html>
