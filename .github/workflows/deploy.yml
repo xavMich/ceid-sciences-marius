@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -18,21 +18,35 @@ jobs:
   github-pages:
     name: GitHub Pages
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare publish folder
+      - name: Prepare site
         run: |
           mkdir -p _site
           cp index.html admin.html store.js _site/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - name: Enable & configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+        continue-on-error: true
+      - name: Upload artifact
+        id: upload
+        uses: actions/upload-pages-artifact@v3
         with:
           path: _site
-      - id: deployment
+        continue-on-error: true
+      - name: Deploy Pages
+        if: steps.upload.outcome == 'success'
+        id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - name: Fallback deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          force_orphan: true
+          full_commit_message: "Deploy CG-vetement"
 
   netlify:
     name: Netlify
@@ -45,8 +59,8 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-            echo "Secrets NETLIFY_AUTH_TOKEN / NETLIFY_SITE_ID absents — étape Netlify ignorée."
-            echo "Dans Netlify : Import project → GitHub → ce repo → publish directory = ."
+            echo "Secrets Netlify absents."
+            echo "Connectez le repo dans Netlify UI (Import from Git) ou ajoutez NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID."
             exit 0
           fi
           npx --yes netlify-cli deploy --prod --dir=. --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN" --message "CG-vetement $(git rev-parse --short HEAD)"
