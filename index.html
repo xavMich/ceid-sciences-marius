@@ -627,18 +627,68 @@ img { max-width: 100%; display: block; }
 
 .review-line {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px 12px;
-  padding: 12px 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: center;
+  padding: 14px 0;
   border-bottom: 1px solid var(--line);
 }
 .review-line:last-child { border-bottom: none; }
-.review-line .meta { color: var(--muted); font-size: .9rem; }
+.review-line .meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
 .review-line.chimsco {
   background: linear-gradient(90deg, rgba(255,243,224,.85), transparent);
   margin: 0 -8px;
-  padding: 10px 8px;
+  padding: 12px 8px;
   border-radius: 12px;
+}
+.review-line-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.review-line-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.review-line .qty {
+  border-radius: 12px;
+}
+.review-line .qty button {
+  width: 40px;
+  height: 40px;
+}
+.review-line .qty output {
+  min-width: 28px;
+  font-size: 1rem;
+}
+.review-remove {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1.5px solid #fecdca;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  transition: background .12s ease, transform .12s ease;
+}
+.review-remove:hover {
+  background: #fee4e2;
+  transform: translateY(-1px);
+}
+.review-line .price-bit {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.review-hint {
+  color: var(--muted);
+  font-size: .9rem;
+  margin: 4px 0 8px;
 }
 .review-total {
   display: flex;
@@ -798,6 +848,7 @@ img { max-width: 100%; display: block; }
     <div class="block" id="reviewBlock">
       <h2>Vérifiez votre commande</h2>
       <p class="lead" id="reviewIdentity"></p>
+      <p class="review-hint">Ajustez les quantités ou retirez un article (×) directement ici — utile si vous dépassez 250 €.</p>
       <div id="reviewAlerts"></div>
       <div id="reviewLines"></div>
       <div class="review-total"><span>Total</span><span id="reviewTotal">0 €</span></div>
@@ -1047,7 +1098,8 @@ function setSize(id, size) {
     if (p.isShoe) c.qty = 1;
     else if (!c.qty) c.qty = 1;
   }
-  save(); renderCatalog(); updateBudget();
+  save();
+  refreshCartViews();
 }
 
 function setQty(id, delta) {
@@ -1063,7 +1115,21 @@ function setQty(id, delta) {
   }
   c.qty = Math.max(0, Math.min(20, (c.qty || 0) + delta));
   if (c.qty === 0) c.size = "";
-  save(); renderCatalog(); updateBudget();
+  save();
+  refreshCartViews();
+}
+
+function removeItem(id) {
+  if (!state.cart[id]) return;
+  state.cart[id] = { size: "", qty: 0, custom: "" };
+  save();
+  refreshCartViews();
+}
+
+function refreshCartViews() {
+  if (state.step === 3) renderReview();
+  else renderCatalog();
+  updateBudget();
 }
 
 function setCustom(id, value) {
@@ -1152,11 +1218,27 @@ function renderReview() {
   const items = selectedItems();
   document.getElementById("reviewLines").innerHTML = items.map(i => {
     const size = i.custom ? `${i.size} · autre ${i.custom}` : i.size;
+    const qtyControls = i.product.isShoe
+      ? `<span class="meta">Qté 1</span>`
+      : `<div class="qty" role="group" aria-label="Quantité ${i.product.name}">
+          <button type="button" data-act="qty" data-id="${i.product.id}" data-delta="-1" aria-label="Moins">−</button>
+          <output aria-live="polite">${i.qty}</output>
+          <button type="button" data-act="qty" data-id="${i.product.id}" data-delta="1" aria-label="Plus">+</button>
+        </div>`;
     return `<div class="review-line ${i.product.isShoe ? "chimsco" : ""}">
-      <div><strong>${i.product.name}</strong><div class="meta">Taille ${size} · Qté ${i.qty}${i.product.isShoe ? " · Fourni Chimsco" : ""}</div></div>
-      <div><strong>${i.product.isShoe ? "Fourni" : euro(i.line)}</strong></div>
+      <div>
+        <strong>${i.product.name}</strong>
+        <div class="meta">Taille ${size}${i.product.isShoe ? " · Fourni Chimsco" : ""}</div>
+      </div>
+      <div class="review-line-side">
+        <div class="price-bit">${i.product.isShoe ? "Fourni" : euro(i.line)}</div>
+        <div class="review-line-actions">
+          ${qtyControls}
+          <button type="button" class="review-remove" data-act="remove" data-id="${i.product.id}" aria-label="Retirer ${i.product.name}">×</button>
+        </div>
+      </div>
     </div>`;
-  }).join("") || `<div class="alert info">Aucun article sélectionné.</div>`;
+  }).join("") || `<div class="alert info">Aucun article sélectionné. Retournez au catalogue pour en ajouter.</div>`;
 
   document.getElementById("reviewTotal").textContent = euro(total());
   document.getElementById("submitBtn").disabled = errors.length > 0;
@@ -1314,6 +1396,14 @@ document.getElementById("filters").addEventListener("click", e => {
   state.filter = btn.dataset.filter;
   document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c === btn));
   renderCatalog();
+});
+
+document.getElementById("reviewLines").addEventListener("click", e => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const { act, id, delta } = btn.dataset;
+  if (act === "qty") setQty(id, +delta);
+  if (act === "remove") removeItem(id);
 });
 
 document.getElementById("catalog").addEventListener("click", e => {
