@@ -65,7 +65,8 @@
       "role": "pull",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c2d00c0e-7f8e-4765-ae92-b3f0d287423d"
     },
     {
       "id": "r79feb0967b4f4445a579118c421c2cf3",
@@ -90,7 +91,8 @@
       "role": "pantalon",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2e3a9669-7f99-4e36-9e45-353e400617a6"
     },
     {
       "id": "re9bbdbafbbd44cd29c9b57a1a78ede2a",
@@ -131,7 +133,8 @@
       "role": "pantalon",
       "isVariant": true,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/27f8f551-12cb-4956-8a80-09a12a5704be"
     },
     {
       "id": "r3e85311b75e24443860dbe323b6a6ee1",
@@ -156,7 +159,8 @@
       "role": "chaussures",
       "isVariant": false,
       "isShoe": true,
-      "defaultQty": 1
+      "defaultQty": 1,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/38c94ad5-aadf-420c-9613-a03295c92105"
     },
     {
       "id": "r0a66b3124a784f72b9b28062de1b9260",
@@ -181,7 +185,8 @@
       "role": "chaussures",
       "isVariant": true,
       "isShoe": true,
-      "defaultQty": 1
+      "defaultQty": 1,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/a6b022ff-4a76-4544-90d5-e05caa15c38a"
     },
     {
       "id": "r65ddfa98538140c8aed1af8ae4c2ad07",
@@ -203,7 +208,8 @@
       "role": "veste",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/94d4d9a3-bf90-4a1a-aab6-56b023956560"
     },
     {
       "id": "r2737942f73f74ca8976dfaf185010ed2",
@@ -225,7 +231,8 @@
       "role": "veste",
       "isVariant": true,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/9fa8f9de-498b-4f3e-9618-715d5cf70cb9"
     },
     {
       "id": "rbcf3cf89a56b4610988f8a72c77dfc03",
@@ -269,7 +276,8 @@
       "role": "veste",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/24451a84-a0fc-404f-ae1a-230507ccc044"
     },
     {
       "id": "r2d37848f6cc5484ca34649d27cc63bb0",
@@ -291,7 +299,8 @@
       "role": "veste",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/f0fa32ec-d53b-4490-b704-f560e168905b"
     },
     {
       "id": "rff8b5a0150184cc38a04035ad071efa1",
@@ -313,7 +322,8 @@
       "role": "pull",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/d3157a30-4a5c-4402-bdfd-23f27ea7591f"
     },
     {
       "id": "ra686a5668ee844e2b9a260f004c0b967",
@@ -335,7 +345,8 @@
       "role": "pull",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2055d223-1254-49f6-8ea2-c57527d7b173"
     },
     {
       "id": "rf6859452f82f45eaab9db506255d3e6a",
@@ -357,7 +368,8 @@
       "role": "veste",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/3020e04a-0c53-4c0f-a98b-340ade5a8f2d"
     },
     {
       "id": "r1b8a3886e6c3472b9a39f833ebdca8f1",
@@ -379,7 +391,8 @@
       "role": "veste",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1ba853bd-a449-4726-9d44-4f71cd410ca0"
     },
     {
       "id": "r93fbf021627043a58bbe77bdd6e86335",
@@ -404,7 +417,8 @@
       "role": "bermuda",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/0f99efe9-01bb-47f0-a6db-d9921e20008a"
     },
     {
       "id": "ra831a01d1c3840078c1b8e6ad22fc82e",
@@ -430,7 +444,8 @@
       "role": "bermuda",
       "isVariant": true,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1dca3ea9-22bd-4569-96a5-f4db62eea754"
     },
     {
       "id": "ra2d6762ea9b54c82a164c5a8b464c0e5",
@@ -451,7 +466,8 @@
       "role": "tshirt",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/00311b51-b979-4e96-a6d1-dccf4cf4a8bc"
     },
     {
       "id": "r1aedd5184a3c4c80a4c1866b4a9f8aa4",
@@ -472,7 +488,8 @@
       "role": "tshirt",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/4732cb76-5111-4361-bf0c-d801c5812f05"
     },
     {
       "id": "r33fd5a4b9266426e92e5a8f9cdfda992",
@@ -493,7 +510,8 @@
       "role": "thermique",
       "isVariant": false,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/681e528f-7dba-47b8-9893-87bdd8072c4c"
     },
     {
       "id": "r29852916e361461fb1e3cc441a6b369f",
@@ -514,7 +532,8 @@
       "role": "thermique",
       "isVariant": true,
       "isShoe": false,
-      "defaultQty": 0
+      "defaultQty": 0,
+      "imageUrl": "https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c5caffb7-b33a-43af-a703-78799df482f8"
     }
   ]
 }

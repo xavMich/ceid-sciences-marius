@@ -353,6 +353,35 @@ img { max-width: 100%; display: block; }
   margin-bottom: 12px;
   transition: border-color .15s, box-shadow .15s, transform .15s;
 }
+.product-layout {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.product-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f7fafa;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.product-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+}
+.product-photo.empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 1.6rem;
+  background: linear-gradient(180deg, #f7fafa, #eef4f2);
+}
+.product-body { min-width: 0; }
 .product.active {
   border-color: var(--teal);
   box-shadow: 0 12px 30px rgba(10,107,111,.12);
@@ -846,7 +875,14 @@ function productCard(p) {
   const qtyDisabled = p.isShoe ? "style=\"opacity:.55;pointer-events:none\"" : "";
   const qtyVal = p.isShoe ? (c.size ? 1 : 0) : (c.qty || 0);
 
+  const photoHtml = p.imageUrl
+    ? `<div class="product-photo"><img src="${p.imageUrl}" alt="" loading="lazy" decoding="async"></div>`
+    : `<div class="product-photo empty" aria-hidden="true">👕</div>`;
+
   return `<article class="product ${active ? "active" : ""} ${p.isVariant ? "variant" : ""}" data-id="${p.id}">
+    <div class="product-layout">
+      ${photoHtml}
+      <div class="product-body">
     <div class="product-top">
       <div>
         <div class="product-name">${p.name}</div>
@@ -864,6 +900,8 @@ function productCard(p) {
       ${p.customQid ? `<div class="custom-size"><input type="text" placeholder="Autre taille…" data-act="custom" data-id="${p.id}" value="${c.custom || ""}"></div>` : ""}
     </div>
     ${active && !p.isShoe ? `<div class="line-total">Sous-total : ${euro(p.price * c.qty)}</div>` : ""}
+      </div>
+    </div>
   </article>`;
 }
 
