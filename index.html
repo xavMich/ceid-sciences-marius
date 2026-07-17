@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CG-vetement — Commande vêtements 2026</title>
+<meta name="description" content="CG-vetement — commande annuelle de vêtements de travail Chimsco.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0a6b6f;
+  --teal-deep: #064548;
+  --teal-soft: #d7eef0;
+  --ink: #1a2426;
+  --muted: #5a6a6d;
+  --line: #c9d6d8;
+  --paper: #f3f7f6;
+  --paper-2: #e7f0ee;
+  --warn: #b45309;
+  --warn-bg: #fff7ed;
+  --ok: #157a3d;
+  --ok-bg: #e8f8ee;
+  --danger: #b42318;
+  --danger-bg: #fef3f2;
+  --chimsco: #c45c00;
+  --chimsco-soft: #fff3e0;
+  --chimsco-line: #f0a020;
+  --shadow: 0 18px 50px rgba(6, 69, 72, 0.12);
+  --radius: 18px;
+  --touch: 48px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, #b9e3e0 0%, transparent 55%),
+    radial-gradient(900px 420px at 100% 0%, #dfece4 0%, transparent 50%),
+    linear-gradient(180deg, var(--paper) 0%, #eef4f2 40%, #f7f5f0 100%);
+  min-height: 100vh;
+  line-height: 1.45;
+}
+button, input { font: inherit; }
+button { cursor: pointer; border: none; background: none; }
+img { max-width: 100%; display: block; }
+
+.app { max-width: 760px; margin: 0 auto; padding-bottom: 120px; }
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: min(72vh, 560px);
+  padding: 28px 22px 40px;
+  overflow: hidden;
+  color: #f4fffe;
+  background:
+    linear-gradient(135deg, rgba(6,69,72,.92) 0%, rgba(10,107,111,.78) 48%, rgba(26,55,48,.88) 100%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(160deg, #0a6b6f, #1f3d34);
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -40% 20%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(255,255,255,.14), transparent 60%);
+  animation: drift 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes drift {
+  from { transform: translate3d(0,0,0) scale(1); }
+  to { transform: translate3d(-40px,-20px,0) scale(1.08); }
+}
+.brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 12vw, 4.4rem);
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  margin-top: 48px;
+  animation: rise .7s ease both;
+}
+.hero h1 {
+  margin-top: 18px;
+  font-size: clamp(1.35rem, 4.5vw, 1.85rem);
+  font-weight: 600;
+  max-width: 16ch;
+  animation: rise .7s .1s ease both;
+}
+.hero p {
+  margin-top: 12px;
+  max-width: 34ch;
+  color: rgba(244,255,254,.86);
+  font-size: 1.05rem;
+  animation: rise .7s .18s ease both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.hero-cta {
+  display: inline-flex;
+  margin-top: 28px;
+  align-items: center;
+  gap: 10px;
+  background: #f4fffe;
+  color: var(--teal-deep);
+  font-weight: 700;
+  padding: 14px 22px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.18);
+  transition: transform .15s ease, box-shadow .15s ease;
+  animation: rise .7s .26s ease both;
+}
+.hero-cta:hover { transform: translateY(-2px); }
+.hero-meta {
+  margin-top: 22px;
+  font-size: .92rem;
+  color: rgba(244,255,254,.75);
+  animation: rise .7s .32s ease both;
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  gap: 8px;
+  padding: 16px 18px 0;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(243,247,246,.88);
+  backdrop-filter: blur(10px);
+}
+.step-pill {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(255,255,255,.65);
+  border: 1px solid var(--line);
+  transition: .2s ease;
+}
+.step-pill.active {
+  color: #fff;
+  background: var(--teal);
+  border-color: var(--teal);
+  box-shadow: 0 8px 20px rgba(10,107,111,.25);
+}
+.step-pill.done { color: var(--ok); border-color: #9ed0b0; background: var(--ok-bg); }
+
+.panel { display: none; padding: 18px; }
+.panel.active { display: block; animation: fadein .35s ease; }
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.block {
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(201,214,216,.8);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.block h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem;
+  margin-bottom: 8px;
+}
+.block .lead { color: var(--muted); margin-bottom: 16px; }
+
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.field input[type="text"] {
+  width: 100%;
+  min-height: var(--touch);
+  border: 2px solid #b7cbce;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 4px rgba(10,107,111,.12);
+}
+
+.rules {
+  background: linear-gradient(180deg, #f8fcfc, #eef7f6);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 8px 0 16px;
+}
+.rules h3 { font-size: 1rem; margin-bottom: 10px; }
+.rules ul { padding-left: 1.1rem; color: var(--muted); }
+.rules li { margin: 8px 0; }
+.rules strong { color: var(--ink); }
+
+.agree {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  transition: .15s ease;
+}
+.agree.on { border-color: var(--teal); background: var(--teal-soft); }
+.agree input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--teal); }
+.agree span { font-weight: 600; }
+
+.btn-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.btn {
+  min-height: var(--touch);
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform .12s ease, background .12s ease, opacity .12s;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--teal); color: #fff; flex: 1; }
+.btn-primary:hover { background: var(--teal-deep); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+.btn-ghost { background: #fff; border: 1.5px solid var(--line); color: var(--ink); }
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal-deep); }
+
+/* Budget bar */
+.budget-bar {
+  position: sticky;
+  top: 54px;
+  z-index: 35;
+  margin: 0 18px 12px;
+  background: rgba(255,255,255,.94);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 28px rgba(6,69,72,.1);
+  backdrop-filter: blur(8px);
+}
+.budget-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.budget-top strong { font-size: 1.2rem; font-variant-numeric: tabular-nums; }
+.budget-top span { color: var(--muted); font-size: .9rem; }
+.meter {
+  height: 10px;
+  background: #e4ecec;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.meter > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--teal), #1f9a7a);
+  border-radius: inherit;
+  transition: width .35s ease, background .2s ease;
+}
+.meter.over > i { background: linear-gradient(90deg, #c2410c, #b42318); }
+.budget-note {
+  margin-top: 8px;
+  font-size: .85rem;
+  color: var(--muted);
+}
+.budget-note.warn { color: var(--danger); font-weight: 600; }
+.budget-note.ok { color: var(--ok); font-weight: 600; }
+
+.pack {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 0 18px 14px;
+}
+.pack-item {
+  text-align: center;
+  padding: 10px 6px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--muted);
+  transition: .2s ease;
+}
+.pack-item .ico {
+  display: grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  margin: 0 auto 6px;
+  border-radius: 50%;
+  font-size: .85rem;
+  font-weight: 800;
+  background: #eef3f3;
+  color: var(--muted);
+}
+.pack-item.ok .ico { background: #c9ecd6; color: var(--ok); }
+.pack-item.miss .ico { background: #ffe8c7; color: var(--warn); }
+.pack-item.ok {
+  color: var(--ok);
+  border-color: #8fcdb0;
+  background: var(--ok-bg);
+}
+.pack-item.miss {
+  color: var(--warn);
+  border-color: #f0c48a;
+  background: var(--warn-bg);
+}
+
+.section-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 22px 0 10px;
+  padding: 0 2px;
+}
+.section-head h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem;
+}
+.section-head p { color: var(--muted); font-size: .9rem; }
+
+.product {
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: border-color .15s, box-shadow .15s, transform .15s;
+}
+.product-layout {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.product-photo {
+  width: 96px;
+  height: 96px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f7fafa;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  padding: 0;
+  position: relative;
+}
+.product-photo.zoomable {
+  cursor: zoom-in;
+  border: none;
+  background: transparent;
+}
+.product-photo.zoomable:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+.product-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
+  pointer-events: none;
+}
+.product-photo.empty {
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 1.6rem;
+  background: linear-gradient(180deg, #f7fafa, #eef4f2);
+  cursor: default;
+}
+.photo-zoom-hint {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(6, 69, 72, 0.82);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  pointer-events: none;
+}
+.product-body { min-width: 0; }
+.product.chimsco {
+  background: linear-gradient(180deg, #fffaf3, var(--chimsco-soft));
+  border-color: var(--chimsco-line);
+}
+.product.chimsco.active {
+  border-color: var(--chimsco);
+  box-shadow: 0 12px 30px rgba(196, 92, 0, 0.16);
+}
+.product.chimsco .badge.chimsco-badge {
+  background: #fde68a;
+  color: #92400e;
+}
+.product.chimsco .price { color: #92400e; }
+.product.chimsco .size-btn.on {
+  background: var(--chimsco);
+  border-color: var(--chimsco);
+}
+.product.chimsco .product-photo {
+  border-color: #f6c56b;
+  background: #fff;
+}
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+.photo-lightbox[hidden] { display: none; }
+.photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(10, 20, 22, 0.82);
+  cursor: zoom-out;
+}
+.photo-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 720px);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 20px;
+  padding: 14px 14px 18px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  animation: fadein .2s ease;
+}
+.photo-lightbox-panel img {
+  width: 100%;
+  max-height: min(72vh, 640px);
+  object-fit: contain;
+  border-radius: 14px;
+  background: #f7fafa;
+}
+.photo-lightbox-caption {
+  margin-top: 12px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+}
+.photo-lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(26, 36, 38, 0.88);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+.photo-lightbox-close:hover { background: rgba(26, 36, 38, 1); }
+.product.active {
+  border-color: var(--teal);
+  box-shadow: 0 12px 30px rgba(10,107,111,.12);
+}
+.product.variant {
+  border-style: dashed;
+  background: linear-gradient(180deg, #fbfffe, #f3faf8);
+}
+.product-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+.product-name { font-weight: 700; font-size: 1.05rem; }
+.badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--teal-soft);
+  color: var(--teal-deep);
+}
+.badge.free { background: #e8f8ee; color: var(--ok); }
+.badge.var { background: #fff4e5; color: #9a3412; }
+.price {
+  font-weight: 800;
+  font-size: 1.15rem;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.price small { font-size: .75rem; font-weight: 600; color: var(--muted); display: block; text-align: right; }
+
+.sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.size-btn {
+  min-width: 48px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: #f7fafa;
+  font-weight: 700;
+  color: var(--ink);
+  transition: .12s ease;
+}
+.size-btn:hover { border-color: var(--teal); }
+.size-btn.on {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+
+.qty-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+.qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+.qty button {
+  width: 46px;
+  height: 44px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--teal-deep);
+}
+.qty button:hover { background: var(--teal-soft); }
+.qty output {
+  min-width: 42px;
+  text-align: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.custom-size {
+  flex: 1;
+  min-width: 160px;
+}
+.custom-size input {
+  width: 100%;
+  min-height: 44px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 8px 12px;
+  background: #fff;
+}
+.line-total {
+  margin-top: 10px;
+  text-align: right;
+  font-size: .92rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 10px;
+  margin: 0 18px;
+  scrollbar-width: none;
+}
+.filters::-webkit-scrollbar { display: none; }
+.chip {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  font-weight: 700;
+  font-size: .88rem;
+  color: var(--muted);
+}
+.chip.on { background: var(--teal-deep); color: #fff; border-color: var(--teal-deep); }
+
+.review-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px 12px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.review-line:last-child { border-bottom: none; }
+.review-line .meta { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+.review-line.chimsco {
+  background: linear-gradient(90deg, rgba(255,243,224,.85), transparent);
+  margin: 0 -8px;
+  padding: 12px 8px;
+  border-radius: 12px;
+}
+.review-line-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.review-line-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.review-line .qty {
+  border-radius: 12px;
+}
+.review-line .qty button {
+  width: 40px;
+  height: 40px;
+}
+.review-line .qty output {
+  min-width: 28px;
+  font-size: 1rem;
+}
+.review-remove {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1.5px solid #fecdca;
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-grid;
+  place-items: center;
+  transition: background .12s ease, transform .12s ease;
+}
+.review-remove:hover {
+  background: #fee4e2;
+  transform: translateY(-1px);
+}
+.review-line .price-bit {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.review-hint {
+  color: var(--muted);
+  font-size: .9rem;
+  margin: 4px 0 8px;
+}
+.review-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 2px solid var(--ink);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+.alert {
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin: 12px 0;
+  font-weight: 600;
+  font-size: .95rem;
+}
+.alert.warn { background: var(--warn-bg); color: #9a3412; border: 1px solid #f0c48a; }
+.alert.err { background: var(--danger-bg); color: var(--danger); border: 1px solid #fecdca; }
+.alert.ok { background: var(--ok-bg); color: var(--ok); border: 1px solid #9ed0b0; }
+.alert.info { background: var(--teal-soft); color: var(--teal-deep); border: 1px solid #9fc8cb; }
+
+.success {
+  text-align: center;
+  padding: 28px 18px;
+}
+.success .check {
+  width: 72px; height: 72px; margin: 0 auto 16px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--ok-bg);
+  color: var(--ok);
+  font-size: 2rem;
+  font-weight: 800;
+  animation: pop .45s ease;
+}
+@keyframes pop {
+  0% { transform: scale(.6); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.dock {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, rgba(243,247,246,.92) 28%, rgba(243,247,246,.98));
+  display: none;
+}
+.dock.show { display: block; }
+.dock .inner {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); border: 0;
+}
+
+@media (max-width: 520px) {
+  .pack { grid-template-columns: repeat(2, 1fr); }
+  .hero { min-height: 68vh; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero" id="top">
+    <div class="brand">CG-vetement</div>
+    <h1>Commande vêtements 2026</h1>
+    <p>Choisissez vos articles, vos tailles et votre quantité. Le total se calcule tout seul.</p>
+    <a class="hero-cta" href="#start" id="startCta">Commencer la commande →</a>
+    <div class="hero-meta">Chimsco · Budget 250 € · Chaussures fournies par l’entreprise</div>
+    <p style="margin-top:18px;font-size:.85rem;opacity:.75;animation:rise .7s .38s ease both">
+      <a href="admin.html" style="color:#f4fffe;font-weight:700">Accès responsable des achats</a>
+    </p>
+  </header>
+
+  <nav class="steps" aria-label="Étapes">
+    <div class="step-pill active" data-step="1">1 · Identité</div>
+    <div class="step-pill" data-step="2">2 · Catalogue</div>
+    <div class="step-pill" data-step="3">3 · Envoi</div>
+  </nav>
+
+  <!-- STEP 1 -->
+  <section class="panel active" id="step1" aria-labelledby="start">
+    <div class="block" id="start">
+      <h2>Qui commande ?</h2>
+      <p class="lead">Indiquez votre nom, puis validez les règles de l’entreprise.</p>
+      <div class="field">
+        <label for="nom">Nom</label>
+        <input id="nom" type="text" autocomplete="family-name" required placeholder="Votre nom">
+      </div>
+      <div class="field">
+        <label for="prenom">Prénom</label>
+        <input id="prenom" type="text" autocomplete="given-name" required placeholder="Votre prénom">
+      </div>
+
+      <div class="rules">
+        <h3>Règles importantes</h3>
+        <ul>
+          <li>Seuls les <strong>vêtements de travail Chimsco</strong> sont acceptés.</li>
+          <li>Le torse nu est interdit.</li>
+          <li>Le pack annuel doit contenir au minimum : <strong>pantalon, pull et veste</strong>.</li>
+          <li>Vous devez toujours disposer de <strong>chaussures de sécurité en bon état</strong> (fournies par Chimsco hors budget, ou vos propres S3 avec preuve d’achat + remise de l’ancienne paire).</li>
+          <li>Commander une nouvelle paire n’est pas obligatoire si vos chaussures actuelles sont encore en bon état.</li>
+        </ul>
+      </div>
+
+      <label class="agree" id="agreeBox">
+        <input type="checkbox" id="agree">
+        <span>Je marque mon accord avec ces règles</span>
+      </label>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="toStep2" disabled>Voir le catalogue →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="panel" id="step2">
+    <div class="budget-bar" id="budgetBar">
+      <div class="budget-top">
+        <strong id="totalLabel">0 €</strong>
+        <span>sur 250 €</span>
+      </div>
+      <div class="meter" id="meter"><i id="meterFill"></i></div>
+      <div class="budget-note" id="budgetNote">Les chaussures ne comptent pas dans le budget.</div>
+    </div>
+
+    <div class="pack" id="pack" aria-label="Pack minimum">
+      <div class="pack-item miss" data-role="chaussures"><span class="ico">1</span>Chaussures</div>
+      <div class="pack-item miss" data-role="pantalon"><span class="ico">2</span>Pantalon</div>
+      <div class="pack-item miss" data-role="pull"><span class="ico">3</span>Pull</div>
+      <div class="pack-item miss" data-role="veste"><span class="ico">4</span>Veste</div>
+    </div>
+
+    <div class="filters" id="filters" role="tablist" aria-label="Filtrer le catalogue">
+      <button class="chip on" data-filter="all">Tout</button>
+      <button class="chip" data-filter="obligatoire">Obligatoire</button>
+      <button class="chip" data-filter="facultatif">Facultatif</button>
+      <button class="chip" data-filter="accessoires">Accessoires</button>
+      <button class="chip" data-filter="selected">Mon panier</button>
+    </div>
+
+    <div id="catalog" style="padding:0 18px"></div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="panel" id="step3">
+    <div class="block" id="reviewBlock">
+      <h2>Vérifiez votre commande</h2>
+      <p class="lead" id="reviewIdentity"></p>
+      <p class="review-hint">Ajustez les quantités ou retirez un article (×) directement ici — utile si vous dépassez 250 €.</p>
+      <div id="reviewAlerts"></div>
+      <div id="reviewLines"></div>
+      <div class="review-total"><span>Total</span><span id="reviewTotal">0 €</span></div>
+      <div class="btn-row" style="margin-top:18px">
+        <button class="btn btn-ghost" id="backToCatalog">← Modifier</button>
+        <button class="btn btn-primary" id="submitBtn">Envoyer la commande</button>
+      </div>
+      <p style="margin-top:12px;color:var(--muted);font-size:.88rem">
+        La commande est enregistrée pour le responsable des achats (relève centralisée).
+      </p>
+    </div>
+    <div class="block success" id="successBlock" hidden>
+      <div class="check">✓</div>
+      <h2>Commande enregistrée</h2>
+      <p class="lead" id="successMsg">Le responsable des achats a reçu votre listing.</p>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn btn-ghost" id="copyBtn">Copier mon récap</button>
+        <a class="btn btn-ghost" href="index.html">Nouvelle commande</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="dock" id="dock">
+  <div class="inner">
+    <button class="btn btn-ghost" id="dockBack">← Retour</button>
+    <button class="btn btn-primary" id="dockNext">Continuer →</button>
+  </div>
+</div>
+
+<div class="photo-lightbox" id="photoLightbox" hidden role="dialog" aria-modal="true" aria-labelledby="photoLightboxCaption">
+  <button type="button" class="photo-lightbox-backdrop" id="photoLightboxBackdrop" aria-label="Fermer l’aperçu"></button>
+  <div class="photo-lightbox-panel">
+    <button type="button" class="photo-lightbox-close" id="photoLightboxClose" aria-label="Fermer">×</button>
+    <img id="photoLightboxImg" alt="">
+    <p class="photo-lightbox-caption" id="photoLightboxCaption"></p>
+  </div>
+</div>
+
+<script src="store.js"></script>
+<script>
+const CATALOG = {"formId":"keLDAFBPAU-AUTeAMijQ_TRNp6HOcYRJnKGvBFa_1GFURjRLU0RBQ0FCTjBaWUJMV0MwMzJNNTdUMy4u","title":"Commande vêtements - 2026","budget":250,"tenantId":"00c3e291-4f50-4f01-8051-37803228d0fd","ownerId":"a1a74d34-71ce-4984-9ca1-af0456bfd461","agreementQid":"r74561d39c5f44a389ec1505ff7e0186a","nomQid":"rdb76e73ebc734e1d9f158543a1065e44","prenomQid":"r7f051e3f45e34896a9996da62432f474","totalQid":"r4053b7ddfce749d090e8df05ac0df721","totalQid2":"r42456632164e4b1b9deee3ff58b0be5e","agreementChoice":"Je marque mon accord","products":[{"id":"r5af500eb926141218c1eecb9402d10da","name":"Bonnet Thinsulate","fullTitle":"Bonnet Thinsulate 8€","price":8,"sizes":["Taille unique"],"sizeQid":"r5af500eb926141218c1eecb9402d10da","qtyQid":"rc23a72ac228244299c631a45414d511b","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"re86491225c1a45ecbbc06cdfb729f6e2","name":"Casquette Trucker","fullTitle":"Casquette Trucker 8€","price":8,"sizes":["Taille unique"],"sizeQid":"re86491225c1a45ecbbc06cdfb729f6e2","qtyQid":"r44275353c38c4d6da738c5ae2a579b7a","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rf5bb2ed68d6f4b44be3e805fe245473c","name":"Sweat-shirt à capuche LMA Québec","fullTitle":"Sweat-shirt à capuche LMA Québec 45€","price":45,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf5bb2ed68d6f4b44be3e805fe245473c","qtyQid":"r3679625e7b5b494c93d87fba8d9dbfbd","customQid":null,"section":"obligatoire","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c2d00c0e-7f8e-4765-ae92-b3f0d287423d"},{"id":"r79feb0967b4f4445a579118c421c2cf3","name":"Pantalon multi-poche LMA Minerai","fullTitle":"Pantalon multi-poche LMA Minerai 40€","price":40,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r79feb0967b4f4445a579118c421c2cf3","qtyQid":"r5107dbd27e1043c1877d0aca5c645d95","customQid":"r6c46ba0798ba4e54b55c8e1575165d01","section":"obligatoire","role":"pantalon","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2e3a9669-7f99-4e36-9e45-353e400617a6"},{"id":"re9bbdbafbbd44cd29c9b57a1a78ede2a","name":"Pantalon multi-poches Snickers 6241","fullTitle":"Variante : Pantalon multi-poches Snickers 6241 80€","price":80,"sizes":["46","48","50","52","54","56","58","60","62","88","92","96","100","104","108","112","116","120","146","148","150","152","154","156","158"],"sizeQid":"re9bbdbafbbd44cd29c9b57a1a78ede2a","qtyQid":"r4560eab58c3141419e867ff315f83d84","customQid":"r99c58e39ff24406fa729dce066e20a25","section":"obligatoire","role":"pantalon","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/27f8f551-12cb-4956-8a80-09a12a5704be"},{"id":"r3e85311b75e24443860dbe323b6a6ee1","name":"Chaussures haute Lemaître Max","fullTitle":"Chaussures haute Lemaître Max","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r3e85311b75e24443860dbe323b6a6ee1","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":false,"isShoe":true,"defaultQty":1,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/38c94ad5-aadf-420c-9613-a03295c92105"},{"id":"r0a66b3124a784f72b9b28062de1b9260","name":"Chaussures haute PUMA Conquest","fullTitle":"Variante : Chaussures haute PUMA Conquest","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r0a66b3124a784f72b9b28062de1b9260","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":true,"isShoe":true,"defaultQty":1,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/a6b022ff-4a76-4544-90d5-e05caa15c38a"},{"id":"r65ddfa98538140c8aed1af8ae4c2ad07","name":"Veste imperméable softshell LMA Rock","fullTitle":"Veste imperméable softshell LMA Rock 60€","price":60,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r65ddfa98538140c8aed1af8ae4c2ad07","qtyQid":"r6017db325e08417087ee18759f5f296e","customQid":null,"section":"obligatoire","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/94d4d9a3-bf90-4a1a-aab6-56b023956560"},{"id":"r2737942f73f74ca8976dfaf185010ed2","name":"Veste imperméable 1104 Snickers","fullTitle":"Variante : Veste imperméable 1104 Snickers 120€","price":120,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2737942f73f74ca8976dfaf185010ed2","qtyQid":"r3183b98817cf468daed5b70d50f224b3","customQid":null,"section":"obligatoire","role":"veste","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/9fa8f9de-498b-4f3e-9618-715d5cf70cb9"},{"id":"rbcf3cf89a56b4610988f8a72c77dfc03","name":"T-shirt Chimsco B&C","fullTitle":"T-shirt Chimsco B&C 8€","price":8,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rbcf3cf89a56b4610988f8a72c77dfc03","qtyQid":"r1a4b9691d133443fab384610d569e6a8","customQid":null,"section":"obligatoire","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rd4f7c3d8bafa42ae8dbf19ba7383637a","name":"Veste bi matière LMA soft","fullTitle":"Veste bi matière LMA soft 75€","price":75,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rd4f7c3d8bafa42ae8dbf19ba7383637a","qtyQid":"r1bceff8e47734235b7e24a1782e972d6","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/24451a84-a0fc-404f-ae1a-230507ccc044"},{"id":"r2d37848f6cc5484ca34649d27cc63bb0","name":"Veste légère 1304 Snickers","fullTitle":"Veste légère 1304 Snickers 110€","price":110,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2d37848f6cc5484ca34649d27cc63bb0","qtyQid":"r0144d1a1e84a40bcb6631ae6f3d181de","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/f0fa32ec-d53b-4490-b704-f560e168905b"},{"id":"rff8b5a0150184cc38a04035ad071efa1","name":"Pull polaire zippé LMA Théorème","fullTitle":"Pull polaire zippé LMA Théorème 50€","price":50,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rff8b5a0150184cc38a04035ad071efa1","qtyQid":"ra190511145d04c1d87e4e663ca8f2e0f","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/d3157a30-4a5c-4402-bdfd-23f27ea7591f"},{"id":"ra686a5668ee844e2b9a260f004c0b967","name":"Sweat col haut LMA Berlin","fullTitle":"Sweat col haut LMA Berlin 30€","price":30,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"ra686a5668ee844e2b9a260f004c0b967","qtyQid":"ra1ade541a00c45f691aa559d415f90a9","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2055d223-1254-49f6-8ea2-c57527d7b173"},{"id":"rf6859452f82f45eaab9db506255d3e6a","name":"Bodywarmer LMA Sable","fullTitle":"Bodywarmer LMA Sable 40€","price":40,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf6859452f82f45eaab9db506255d3e6a","qtyQid":"rced947a798494bf898d21d5124114a43","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/3020e04a-0c53-4c0f-a98b-340ade5a8f2d"},{"id":"r1b8a3886e6c3472b9a39f833ebdca8f1","name":"Bodywarmer LMA Rebel","fullTitle":"Bodywarmer LMA Rebel 70€","price":70,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r1b8a3886e6c3472b9a39f833ebdca8f1","qtyQid":"rc81a40a4ac84489fb76647f79405aeb4","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1ba853bd-a449-4726-9d44-4f71cd410ca0"},{"id":"r93fbf021627043a58bbe77bdd6e86335","name":"Bermuda LMA Sediment","fullTitle":"Bermuda LMA Sediment 35€","price":35,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r93fbf021627043a58bbe77bdd6e86335","qtyQid":"rc9f956db3e464fc99d84b9ae732a5428","customQid":"r867896ddb1a94f5d9bdc525fea61e9ae","section":"facultatif","role":"bermuda","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/0f99efe9-01bb-47f0-a6db-d9921e20008a"},{"id":"ra831a01d1c3840078c1b8e6ad22fc82e","name":"Bermuda multi-poches Snickers 6141","fullTitle":"Variante : Bermuda multi-poches Snickers 6141 65€","price":65,"sizes":["44","46","48","50","52","54","56","58","60","62"],"sizeQid":"ra831a01d1c3840078c1b8e6ad22fc82e","qtyQid":"re03cedd280e9439aacd8fb94b67429cc","customQid":"rebd23b929b664fbe834b9101e2bf70ad","section":"facultatif","role":"bermuda","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1dca3ea9-22bd-4569-96a5-f4db62eea754"},{"id":"ra2d6762ea9b54c82a164c5a8b464c0e5","name":"T-shirt manches longues B&C","fullTitle":"T-shirt manches longues B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"ra2d6762ea9b54c82a164c5a8b464c0e5","qtyQid":"ra4190190a09e42c1b0e3928047f59ebc","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/00311b51-b979-4e96-a6d1-dccf4cf4a8bc"},{"id":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","name":"T-shirt marcel B&C","fullTitle":"T-shirt marcel B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","qtyQid":"rf1ff6dd45ed046bc9d45dab5c396e205","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/4732cb76-5111-4361-bf0c-d801c5812f05"},{"id":"r33fd5a4b9266426e92e5a8f9cdfda992","name":"Sous-vêtements thermique en polaire LMA (haut et bas)","fullTitle":"Sous-vêtements thermique en polaire LMA (haut et bas) 25€","price":25,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r33fd5a4b9266426e92e5a8f9cdfda992","qtyQid":"r047129d4e45a4bc69178d58c14b1728e","customQid":null,"section":"facultatif","role":"thermique","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/681e528f-7dba-47b8-9893-87bdd8072c4c"},{"id":"r29852916e361461fb1e3cc441a6b369f","name":"Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement)","fullTitle":"Variante : Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement) 20€","price":20,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r29852916e361461fb1e3cc441a6b369f","qtyQid":"r98222acdef214a9586ff14d4d1d8a425","customQid":null,"section":"facultatif","role":"thermique","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c5caffb7-b33a-43af-a703-78799df482f8"}]};
+
+const FORMS_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=" + CATALOG.formId;
+const ORDER_EMAIL = (window.ChimscoStore && ChimscoStore.STORE.achatsEmail) || "xavier@chimsco.be";
+const STORAGE_KEY = "chimsco-commande-vetements-2026";
+
+const state = {
+  step: 1,
+  nom: "",
+  prenom: "",
+  agree: false,
+  filter: "all",
+  cart: {}, // id -> {size, qty, custom}
+  startDate: new Date().toISOString(),
+  lastSummary: ""
+};
+
+const byId = Object.fromEntries(CATALOG.products.map(p => [p.id, p]));
+
+function euro(n) {
+  return new Intl.NumberFormat("fr-BE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    Object.assign(state, data);
+  } catch (_) {}
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    nom: state.nom,
+    prenom: state.prenom,
+    agree: state.agree,
+    cart: state.cart,
+    startDate: state.startDate
+  }));
+}
+
+function selectedItems() {
+  return CATALOG.products
+    .map(p => {
+      const c = state.cart[p.id];
+      if (!c || !c.size || !c.qty) return null;
+      return { product: p, ...c, line: p.price * c.qty };
+    })
+    .filter(Boolean);
+}
+
+function total() {
+  return selectedItems().reduce((s, i) => s + i.line, 0);
+}
+
+function packStatus() {
+  const items = selectedItems();
+  const has = role => items.some(i => i.product.role === role);
+  // Pull: sweat/pull ; veste de travail: role veste (bodywarmer counts as outer layer too)
+  return {
+    chaussures: has("chaussures"),
+    pantalon: has("pantalon"),
+    pull: has("pull"),
+    veste: has("veste")
+  };
+}
+
+function updateIdentityGate() {
+  const ok = state.nom.trim() && state.prenom.trim() && state.agree;
+  document.getElementById("toStep2").disabled = !ok;
+  document.getElementById("agreeBox").classList.toggle("on", state.agree);
+}
+
+function setStep(n) {
+  state.step = n;
+  document.querySelectorAll(".panel").forEach((el, i) => el.classList.toggle("active", i + 1 === n));
+  document.querySelectorAll(".step-pill").forEach(el => {
+    const s = +el.dataset.step;
+    el.classList.toggle("active", s === n);
+    el.classList.toggle("done", s < n);
+  });
+  const dock = document.getElementById("dock");
+  dock.classList.toggle("show", n === 2);
+  if (n === 2) updateBudget();
+  if (n === 3) renderReview();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  save();
+}
+
+function updateBudget() {
+  const t = total();
+  const pct = Math.min(100, (t / CATALOG.budget) * 100);
+  document.getElementById("totalLabel").textContent = euro(t);
+  document.getElementById("meterFill").style.width = pct + "%";
+  const meter = document.getElementById("meter");
+  const note = document.getElementById("budgetNote");
+  meter.classList.toggle("over", t > CATALOG.budget);
+  if (t > CATALOG.budget) {
+    note.textContent = "Budget dépassé de " + euro(t - CATALOG.budget) + " — retirez des articles.";
+    note.className = "budget-note warn";
+  } else if (t === 0) {
+    note.textContent = "Les chaussures ne comptent pas dans le budget.";
+    note.className = "budget-note";
+  } else {
+    note.textContent = "Il reste " + euro(CATALOG.budget - t) + ".";
+    note.className = "budget-note ok";
+  }
+
+  const pack = packStatus();
+  document.querySelectorAll(".pack-item").forEach(el => {
+    const ok = pack[el.dataset.role];
+    el.classList.toggle("ok", !!ok);
+    el.classList.toggle("miss", !ok);
+  });
+}
+
+function renderCatalog() {
+  const root = document.getElementById("catalog");
+  const sections = [
+    { key: "obligatoire", title: "Pack & essentiels", sub: "Chaussures, pantalon, pull, veste…" },
+    { key: "facultatif", title: "Options", sub: "Complétez selon vos besoins" },
+    { key: "accessoires", title: "Accessoires", sub: "Bonnet, casquette" }
+  ];
+
+  let html = "";
+  for (const sec of sections) {
+    if (state.filter !== "all" && state.filter !== "selected" && state.filter !== sec.key) continue;
+    const products = CATALOG.products.filter(p => {
+      if (p.section !== sec.key) return false;
+      if (state.filter === "selected") {
+        const c = state.cart[p.id];
+        return c && c.size && c.qty;
+      }
+      return true;
+    });
+    if (!products.length) continue;
+    html += `<div class="section-head"><div><h2>${sec.title}</h2><p>${sec.sub}</p></div></div>`;
+    for (const p of products) html += productCard(p);
+  }
+  if (!html) html = `<div class="alert info">Aucun article dans ce filtre.</div>`;
+  root.innerHTML = html;
+}
+
+function productCard(p) {
+  const c = state.cart[p.id] || { size: "", qty: 0, custom: "" };
+  const active = c.size && c.qty > 0;
+  const priceLabel = p.isShoe ? "Fourni" : euro(p.price);
+  const badges = [
+    p.isShoe ? `<span class="badge chimsco-badge">Fourni Chimsco</span>` : "",
+    p.isVariant ? `<span class="badge var">Variante</span>` : "",
+    p.section === "obligatoire" && !p.isVariant && !p.isShoe ? `<span class="badge">Essentiel</span>` : ""
+  ].join(" ");
+
+  const sizes = p.sizes.map(s =>
+    `<button type="button" class="size-btn ${c.size === s ? "on" : ""}" data-act="size" data-id="${p.id}" data-size="${s}">${s}</button>`
+  ).join("");
+
+  const qtyDisabled = p.isShoe ? "style=\"opacity:.55;pointer-events:none\"" : "";
+  const qtyVal = p.isShoe ? (c.size ? 1 : 0) : (c.qty || 0);
+
+  const photoHtml = p.imageUrl
+    ? `<button type="button" class="product-photo zoomable" data-act="photo" data-id="${p.id}" aria-label="Agrandir la photo de ${p.name}"><img src="${p.imageUrl}" alt="" loading="lazy" decoding="async"><span class="photo-zoom-hint" aria-hidden="true">+</span></button>`
+    : `<div class="product-photo empty" aria-hidden="true">👕</div>`;
+
+  return `<article class="product ${active ? "active" : ""} ${p.isVariant ? "variant" : ""} ${p.isShoe ? "chimsco" : ""}" data-id="${p.id}">
+    <div class="product-layout">
+      ${photoHtml}
+      <div class="product-body">
+    <div class="product-top">
+      <div>
+        <div class="product-name">${p.name}</div>
+        ${badges}
+      </div>
+      <div class="price">${priceLabel}${p.isShoe ? "<small>par Chimsco</small>" : "<small>pièce</small>"}</div>
+    </div>
+    <div class="sizes" role="group" aria-label="Tailles ${p.name}">${sizes}</div>
+    <div class="qty-row">
+      <div class="qty" ${qtyDisabled}>
+        <button type="button" data-act="qty" data-id="${p.id}" data-delta="-1" aria-label="Moins">−</button>
+        <output aria-live="polite">${qtyVal}</output>
+        <button type="button" data-act="qty" data-id="${p.id}" data-delta="1" aria-label="Plus">+</button>
+      </div>
+      ${p.customQid ? `<div class="custom-size"><input type="text" placeholder="Autre taille…" data-act="custom" data-id="${p.id}" value="${c.custom || ""}"></div>` : ""}
+    </div>
+    ${active && !p.isShoe ? `<div class="line-total">Sous-total : ${euro(p.price * c.qty)}</div>` : ""}
+      </div>
+    </div>
+  </article>`;
+}
+
+function ensureCart(id) {
+  if (!state.cart[id]) state.cart[id] = { size: "", qty: 0, custom: "" };
+  return state.cart[id];
+}
+
+function setSize(id, size) {
+  const p = byId[id];
+  const c = ensureCart(id);
+  if (c.size === size) {
+    // toggle off
+    c.size = "";
+    c.qty = 0;
+  } else {
+    c.size = size;
+    if (p.isShoe) c.qty = 1;
+    else if (!c.qty) c.qty = 1;
+  }
+  save();
+  refreshCartViews();
+}
+
+function setQty(id, delta) {
+  const p = byId[id];
+  if (p.isShoe) return;
+  const c = ensureCart(id);
+  if (!c.size && delta > 0) {
+    // need size first — briefly highlight
+    const el = document.querySelector(`.product[data-id="${id}"]`);
+    if (el) el.style.outline = "2px solid var(--warn)";
+    setTimeout(() => { if (el) el.style.outline = ""; }, 700);
+    return;
+  }
+  c.qty = Math.max(0, Math.min(20, (c.qty || 0) + delta));
+  if (c.qty === 0) c.size = "";
+  save();
+  refreshCartViews();
+}
+
+function removeItem(id) {
+  if (!state.cart[id]) return;
+  state.cart[id] = { size: "", qty: 0, custom: "" };
+  save();
+  refreshCartViews();
+}
+
+function refreshCartViews() {
+  if (state.step === 3) renderReview();
+  else renderCatalog();
+  updateBudget();
+}
+
+function setCustom(id, value) {
+  ensureCart(id).custom = value;
+  save();
+}
+
+function openPhotoLightbox(src, caption) {
+  const box = document.getElementById("photoLightbox");
+  document.getElementById("photoLightboxImg").src = src;
+  document.getElementById("photoLightboxImg").alt = caption;
+  document.getElementById("photoLightboxCaption").textContent = caption;
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("photoLightboxClose").focus();
+}
+
+function closePhotoLightbox() {
+  const box = document.getElementById("photoLightbox");
+  box.hidden = true;
+  document.getElementById("photoLightboxImg").src = "";
+  document.body.style.overflow = "";
+}
+
+function validateForSubmit() {
+  const errors = [];
+  const warnings = [];
+  const pack = packStatus();
+  if (!pack.chaussures) {
+    warnings.push("Aucune chaussure commandée — rappelez-vous : des chaussures de sécurité en bon état sont obligatoires.");
+  }
+  if (!pack.pantalon) warnings.push("Aucun pantalon dans la commande (ok si vous en avez déjà).");
+  if (!pack.pull) warnings.push("Aucun pull / sweat dans la commande (ok si vous en avez déjà).");
+  if (!pack.veste) warnings.push("Aucune veste dans la commande (ok si vous en avez déjà).");
+  if (total() > CATALOG.budget) errors.push("Le total dépasse 250 €.");
+  if (!selectedItems().length) errors.push("Votre panier est vide.");
+  for (const [id, c] of Object.entries(state.cart)) {
+    if ((c.qty && !c.size) || (c.size && !c.qty)) {
+      errors.push(`Taille ou quantité manquante pour « ${byId[id].name} ».`);
+    }
+  }
+  return { errors, warnings };
+}
+
+function buildSummary() {
+  const items = selectedItems();
+  const lines = [
+    "COMMANDES VÊTEMENTS CHIMSCO 2026",
+    "================================",
+    `Nom : ${state.nom.trim().toUpperCase()}`,
+    `Prénom : ${state.prenom.trim()}`,
+    "",
+    "Articles :"
+  ];
+  for (const i of items) {
+    const size = i.custom ? `${i.size} (autre: ${i.custom})` : i.size;
+    const priceBit = i.product.isShoe ? "fourni" : `${euro(i.product.price)} × ${i.qty} = ${euro(i.line)}`;
+    lines.push(`• ${i.product.name} — taille ${size} — ${priceBit}`);
+  }
+  lines.push("");
+  lines.push(`TOTAL : ${euro(total())} / ${euro(CATALOG.budget)}`);
+  lines.push("");
+  lines.push("Accord règles : oui");
+  lines.push(`Date : ${new Date().toLocaleString("fr-BE")}`);
+  return lines.join("\n");
+}
+
+function renderReview() {
+  document.getElementById("reviewBlock").hidden = false;
+  document.getElementById("successBlock").hidden = true;
+  document.getElementById("reviewIdentity").textContent =
+    `${state.prenom.trim()} ${state.nom.trim().toUpperCase()} · budget ${euro(CATALOG.budget)}`;
+
+  const { errors, warnings } = validateForSubmit();
+  const alerts = document.getElementById("reviewAlerts");
+  let html = "";
+  html += errors.map(e => `<div class="alert err">${e}</div>`).join("");
+  html += warnings.map(w => `<div class="alert warn">${w}</div>`).join("");
+  if (!errors.length && !warnings.length) {
+    html = `<div class="alert ok">Pack complet · budget respecté.</div>`;
+  } else if (!errors.length) {
+    html += `<div class="alert ok">Budget OK — vous pouvez envoyer.</div>`;
+  }
+  alerts.innerHTML = html;
+
+  const items = selectedItems();
+  document.getElementById("reviewLines").innerHTML = items.map(i => {
+    const size = i.custom ? `${i.size} · autre ${i.custom}` : i.size;
+    const qtyControls = i.product.isShoe
+      ? `<span class="meta">Qté 1</span>`
+      : `<div class="qty" role="group" aria-label="Quantité ${i.product.name}">
+          <button type="button" data-act="qty" data-id="${i.product.id}" data-delta="-1" aria-label="Moins">−</button>
+          <output aria-live="polite">${i.qty}</output>
+          <button type="button" data-act="qty" data-id="${i.product.id}" data-delta="1" aria-label="Plus">+</button>
+        </div>`;
+    return `<div class="review-line ${i.product.isShoe ? "chimsco" : ""}">
+      <div>
+        <strong>${i.product.name}</strong>
+        <div class="meta">Taille ${size}${i.product.isShoe ? " · Fourni Chimsco" : ""}</div>
+      </div>
+      <div class="review-line-side">
+        <div class="price-bit">${i.product.isShoe ? "Fourni" : euro(i.line)}</div>
+        <div class="review-line-actions">
+          ${qtyControls}
+          <button type="button" class="review-remove" data-act="remove" data-id="${i.product.id}" aria-label="Retirer ${i.product.name}">×</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("") || `<div class="alert info">Aucun article sélectionné. Retournez au catalogue pour en ajouter.</div>`;
+
+  document.getElementById("reviewTotal").textContent = euro(total());
+  document.getElementById("submitBtn").disabled = errors.length > 0;
+}
+
+function buildFormsAnswers() {
+  const answers = [
+    { questionId: CATALOG.nomQid, answer1: state.nom.trim() },
+    { questionId: CATALOG.prenomQid, answer1: state.prenom.trim() },
+    { questionId: CATALOG.agreementQid, answer1: CATALOG.agreementChoice }
+  ];
+  for (const p of CATALOG.products) {
+    const c = state.cart[p.id];
+    const selected = c && c.size && c.qty;
+    answers.push({ questionId: p.sizeQid, answer1: selected ? c.size : null });
+    if (p.qtyQid) answers.push({ questionId: p.qtyQid, answer1: selected ? String(c.qty) : null });
+    if (p.customQid) answers.push({ questionId: p.customQid, answer1: selected && c.custom ? c.custom : null });
+  }
+  const t = String(total());
+  answers.push({ questionId: CATALOG.totalQid, answer1: t });
+  answers.push({ questionId: CATALOG.totalQid2, answer1: t });
+  return answers;
+}
+
+async function trySubmitToForms() {
+  const url = `https://forms.office.com/formapi/api/${CATALOG.tenantId}/users/${CATALOG.ownerId}/light/runtimeForms('${CATALOG.formId}')/responses`;
+  const payload = {
+    startDate: state.startDate,
+    submitDate: new Date().toISOString(),
+    answers: JSON.stringify(buildFormsAnswers()),
+    submitLanguage: JSON.stringify({ localeId: "fr-FR", displayName: "Français", languageCode: "fr" }),
+    emailReceiptConsent: null
+  };
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(payload),
+    mode: "cors"
+  });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return res.json();
+}
+
+function buildOrderPayload() {
+  const items = selectedItems().map(i => ({
+    productId: i.product.id,
+    name: i.product.name,
+    size: i.size,
+    custom: i.custom || "",
+    qty: i.qty,
+    price: i.product.price,
+    line: i.line
+  }));
+  return {
+    id: crypto.randomUUID(),
+    nom: state.nom.trim(),
+    prenom: state.prenom.trim(),
+    total: total(),
+    budget: CATALOG.budget,
+    items,
+    summary: buildSummary(),
+    createdAt: new Date().toISOString(),
+    source: "chimsco-web"
+  };
+}
+
+async function submitOrder() {
+  const { errors } = validateForSubmit();
+  if (errors.length) { renderReview(); return; }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Envoi…";
+
+  const summary = buildSummary();
+  state.lastSummary = summary;
+  localStorage.setItem(STORAGE_KEY + "-last", summary);
+
+  const order = buildOrderPayload();
+  let storeOk = false;
+  let storeErr = "";
+  try {
+    await ChimscoStore.saveOrder(order);
+    storeOk = true;
+  } catch (e) {
+    storeErr = e.message || "erreur réseau";
+  }
+
+  // Best-effort mirror vers Microsoft Forms (si CORS le permet)
+  try { await trySubmitToForms(); } catch (_) {}
+
+  document.getElementById("reviewBlock").hidden = true;
+  document.getElementById("successBlock").hidden = false;
+
+  if (storeOk) {
+    document.getElementById("successMsg").textContent =
+      "Commande envoyée à la relève achats. Merci !";
+    // Notifier aussi par e-mail le responsable (client mail local)
+    const subject = encodeURIComponent(`Nouvelle commande vêtements — ${state.prenom} ${state.nom}`);
+    const body = encodeURIComponent(summary + "\n\n—\nVisible aussi dans la relève : admin.html");
+    // Ouverture discrète uniquement si l'utilisateur a un client mail ; non bloquant
+    try {
+      const a = document.createElement("a");
+      a.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
+      // ne pas auto-ouvrir pour éviter double friction ; bouton retiré volontairement
+    } catch (_) {}
+  } else {
+    document.getElementById("successMsg").textContent =
+      "Enregistrement central indisponible (" + storeErr + "). Envoi par e-mail…";
+    const subject = encodeURIComponent(`Commande vêtements 2026 — ${state.prenom} ${state.nom}`);
+    const body = encodeURIComponent(summary);
+    setTimeout(() => {
+      location.href = `mailto:${ORDER_EMAIL}?subject=${subject}&body=${body}`;
+    }, 350);
+  }
+
+  document.getElementById("copyBtn").onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(summary);
+      document.getElementById("copyBtn").textContent = "Copié ✓";
+      setTimeout(() => { document.getElementById("copyBtn").textContent = "Copier mon récap"; }, 1600);
+    } catch (_) {
+      prompt("Copiez ce texte :", summary);
+    }
+  };
+
+  // Vider le panier local après succès
+  if (storeOk) {
+    state.cart = {};
+    state.startDate = new Date().toISOString();
+    save();
+  }
+
+  btn.disabled = false;
+  btn.textContent = "Envoyer la commande";
+}
+
+// Events
+document.getElementById("nom").addEventListener("input", e => { state.nom = e.target.value; updateIdentityGate(); save(); });
+document.getElementById("prenom").addEventListener("input", e => { state.prenom = e.target.value; updateIdentityGate(); save(); });
+document.getElementById("agree").addEventListener("change", e => { state.agree = e.target.checked; updateIdentityGate(); save(); });
+document.getElementById("toStep2").addEventListener("click", () => setStep(2));
+document.getElementById("startCta").addEventListener("click", e => {
+  e.preventDefault();
+  document.getElementById("start").scrollIntoView({ behavior: "smooth" });
+});
+document.getElementById("dockBack").addEventListener("click", () => setStep(1));
+document.getElementById("dockNext").addEventListener("click", () => setStep(3));
+document.getElementById("backToCatalog").addEventListener("click", () => setStep(2));
+document.getElementById("submitBtn").addEventListener("click", submitOrder);
+
+document.getElementById("filters").addEventListener("click", e => {
+  const btn = e.target.closest(".chip");
+  if (!btn) return;
+  state.filter = btn.dataset.filter;
+  document.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c === btn));
+  renderCatalog();
+});
+
+document.getElementById("reviewLines").addEventListener("click", e => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const { act, id, delta } = btn.dataset;
+  if (act === "qty") setQty(id, +delta);
+  if (act === "remove") removeItem(id);
+});
+
+document.getElementById("catalog").addEventListener("click", e => {
+  const photo = e.target.closest("[data-act=photo]");
+  if (photo) {
+    const p = byId[photo.dataset.id];
+    if (p?.imageUrl) openPhotoLightbox(p.imageUrl, p.name);
+    return;
+  }
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const { act, id, size, delta } = btn.dataset;
+  if (act === "size") setSize(id, size);
+  if (act === "qty") setQty(id, +delta);
+});
+document.getElementById("photoLightboxClose").addEventListener("click", closePhotoLightbox);
+document.getElementById("photoLightboxBackdrop").addEventListener("click", closePhotoLightbox);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !document.getElementById("photoLightbox").hidden) closePhotoLightbox();
+});
+document.getElementById("catalog").addEventListener("input", e => {
+  const el = e.target.closest("[data-act=custom]");
+  if (!el) return;
+  setCustom(el.dataset.id, el.value);
+});
+
+// Init
+load();
+document.getElementById("nom").value = state.nom || "";
+document.getElementById("prenom").value = state.prenom || "";
+document.getElementById("agree").checked = !!state.agree;
+updateIdentityGate();
+renderCatalog();
+updateBudget();
+</script>
+</body>
+</html>
