@@ -747,9 +747,9 @@ img { max-width: 100%; display: block; }
         <ul>
           <li>Seuls les <strong>vêtements de travail Chimsco</strong> sont acceptés.</li>
           <li>Le torse nu est interdit.</li>
-          <li>Le pack annuel doit contenir au minimum : <strong>chaussures, pantalon, pull et veste</strong>.</li>
-          <li>Les <strong>chaussures</strong> sont obligatoires chaque année (fournies par Chimsco, hors budget).</li>
-          <li>Si vous achetez vos propres chaussures : preuve d’achat + conformité <strong>S3</strong>, et remise de l’ancienne paire.</li>
+          <li>Le pack annuel doit contenir au minimum : <strong>pantalon, pull et veste</strong>.</li>
+          <li>Vous devez toujours disposer de <strong>chaussures de sécurité en bon état</strong> (fournies par Chimsco hors budget, ou vos propres S3 avec preuve d’achat + remise de l’ancienne paire).</li>
+          <li>Commander une nouvelle paire n’est pas obligatoire si vos chaussures actuelles sont encore en bon état.</li>
         </ul>
       </div>
 
@@ -1092,7 +1092,9 @@ function validateForSubmit() {
   const errors = [];
   const warnings = [];
   const pack = packStatus();
-  if (!pack.chaussures) errors.push("Choisissez une paire de chaussures (Lemaître ou PUMA) — obligatoire chaque année.");
+  if (!pack.chaussures) {
+    warnings.push("Aucune chaussure commandée — rappelez-vous : des chaussures de sécurité en bon état sont obligatoires.");
+  }
   if (!pack.pantalon) warnings.push("Aucun pantalon dans la commande (ok si vous en avez déjà).");
   if (!pack.pull) warnings.push("Aucun pull / sweat dans la commande (ok si vous en avez déjà).");
   if (!pack.veste) warnings.push("Aucune veste dans la commande (ok si vous en avez déjà).");
