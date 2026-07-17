@@ -23,7 +23,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p _site
-          cp index.html admin.html store.js _site/
+          cp index.html admin.html store.js catalog.json _redirects _site/
       - name: Enable & configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -59,8 +59,9 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-            echo "Secrets Netlify absents."
-            echo "Connectez le repo dans Netlify UI (Import from Git) ou ajoutez NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID."
+            echo "::warning::Secrets Netlify absents — déploiement ignoré."
+            echo "Dans Netlify : site CG-vetement → Link repository → xavMich/ceid-sciences-marius"
+            echo "Ou ajoutez NETLIFY_AUTH_TOKEN + NETLIFY_SITE_ID dans les secrets GitHub."
             exit 0
           fi
           npx --yes netlify-cli deploy --prod --dir=. --site="$NETLIFY_SITE_ID" --auth="$NETLIFY_AUTH_TOKEN" --message "CG-vetement $(git rev-parse --short HEAD)"
