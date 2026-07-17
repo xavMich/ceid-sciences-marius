@@ -24,6 +24,9 @@
   --ok-bg: #e8f8ee;
   --danger: #b42318;
   --danger-bg: #fef3f2;
+  --chimsco: #c45c00;
+  --chimsco-soft: #fff3e0;
+  --chimsco-line: #f0a020;
   --shadow: 0 18px 50px rgba(6, 69, 72, 0.12);
   --radius: 18px;
   --touch: 48px;
@@ -367,12 +370,24 @@ img { max-width: 100%; display: block; }
   background: #f7fafa;
   border: 1px solid var(--line);
   flex-shrink: 0;
+  padding: 0;
+  position: relative;
+}
+.product-photo.zoomable {
+  cursor: zoom-in;
+  border: none;
+  background: transparent;
+}
+.product-photo.zoomable:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
 }
 .product-photo img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   background: #fff;
+  pointer-events: none;
 }
 .product-photo.empty {
   display: grid;
@@ -380,8 +395,103 @@ img { max-width: 100%; display: block; }
   color: var(--muted);
   font-size: 1.6rem;
   background: linear-gradient(180deg, #f7fafa, #eef4f2);
+  cursor: default;
+}
+.photo-zoom-hint {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(6, 69, 72, 0.82);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  pointer-events: none;
 }
 .product-body { min-width: 0; }
+.product.chimsco {
+  background: linear-gradient(180deg, #fffaf3, var(--chimsco-soft));
+  border-color: var(--chimsco-line);
+}
+.product.chimsco.active {
+  border-color: var(--chimsco);
+  box-shadow: 0 12px 30px rgba(196, 92, 0, 0.16);
+}
+.product.chimsco .badge.chimsco-badge {
+  background: #fde68a;
+  color: #92400e;
+}
+.product.chimsco .price { color: #92400e; }
+.product.chimsco .size-btn.on {
+  background: var(--chimsco);
+  border-color: var(--chimsco);
+}
+.product.chimsco .product-photo {
+  border-color: #f6c56b;
+  background: #fff;
+}
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+.photo-lightbox[hidden] { display: none; }
+.photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  background: rgba(10, 20, 22, 0.82);
+  cursor: zoom-out;
+}
+.photo-lightbox-panel {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 720px);
+  max-height: 90vh;
+  background: #fff;
+  border-radius: 20px;
+  padding: 14px 14px 18px;
+  box-shadow: 0 24px 80px rgba(0,0,0,.35);
+  animation: fadein .2s ease;
+}
+.photo-lightbox-panel img {
+  width: 100%;
+  max-height: min(72vh, 640px);
+  object-fit: contain;
+  border-radius: 14px;
+  background: #f7fafa;
+}
+.photo-lightbox-caption {
+  margin-top: 12px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink);
+}
+.photo-lightbox-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(26, 36, 38, 0.88);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+}
+.photo-lightbox-close:hover { background: rgba(26, 36, 38, 1); }
 .product.active {
   border-color: var(--teal);
   box-shadow: 0 12px 30px rgba(10,107,111,.12);
@@ -524,6 +634,12 @@ img { max-width: 100%; display: block; }
 }
 .review-line:last-child { border-bottom: none; }
 .review-line .meta { color: var(--muted); font-size: .9rem; }
+.review-line.chimsco {
+  background: linear-gradient(90deg, rgba(255,243,224,.85), transparent);
+  margin: 0 -8px;
+  padding: 10px 8px;
+  border-radius: 12px;
+}
 .review-total {
   display: flex;
   justify-content: space-between;
@@ -712,6 +828,15 @@ img { max-width: 100%; display: block; }
   </div>
 </div>
 
+<div class="photo-lightbox" id="photoLightbox" hidden role="dialog" aria-modal="true" aria-labelledby="photoLightboxCaption">
+  <button type="button" class="photo-lightbox-backdrop" id="photoLightboxBackdrop" aria-label="Fermer l’aperçu"></button>
+  <div class="photo-lightbox-panel">
+    <button type="button" class="photo-lightbox-close" id="photoLightboxClose" aria-label="Fermer">×</button>
+    <img id="photoLightboxImg" alt="">
+    <p class="photo-lightbox-caption" id="photoLightboxCaption"></p>
+  </div>
+</div>
+
 <script src="store.js"></script>
 <script>
 const CATALOG = {"formId":"keLDAFBPAU-AUTeAMijQ_TRNp6HOcYRJnKGvBFa_1GFURjRLU0RBQ0FCTjBaWUJMV0MwMzJNNTdUMy4u","title":"Commande vêtements - 2026","budget":250,"tenantId":"00c3e291-4f50-4f01-8051-37803228d0fd","ownerId":"a1a74d34-71ce-4984-9ca1-af0456bfd461","agreementQid":"r74561d39c5f44a389ec1505ff7e0186a","nomQid":"rdb76e73ebc734e1d9f158543a1065e44","prenomQid":"r7f051e3f45e34896a9996da62432f474","totalQid":"r4053b7ddfce749d090e8df05ac0df721","totalQid2":"r42456632164e4b1b9deee3ff58b0be5e","agreementChoice":"Je marque mon accord","products":[{"id":"r5af500eb926141218c1eecb9402d10da","name":"Bonnet Thinsulate","fullTitle":"Bonnet Thinsulate 8€","price":8,"sizes":["Taille unique"],"sizeQid":"r5af500eb926141218c1eecb9402d10da","qtyQid":"rc23a72ac228244299c631a45414d511b","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"re86491225c1a45ecbbc06cdfb729f6e2","name":"Casquette Trucker","fullTitle":"Casquette Trucker 8€","price":8,"sizes":["Taille unique"],"sizeQid":"re86491225c1a45ecbbc06cdfb729f6e2","qtyQid":"r44275353c38c4d6da738c5ae2a579b7a","customQid":null,"section":"accessoires","role":"couvrechef","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rf5bb2ed68d6f4b44be3e805fe245473c","name":"Sweat-shirt à capuche LMA Québec","fullTitle":"Sweat-shirt à capuche LMA Québec 45€","price":45,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf5bb2ed68d6f4b44be3e805fe245473c","qtyQid":"r3679625e7b5b494c93d87fba8d9dbfbd","customQid":null,"section":"obligatoire","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c2d00c0e-7f8e-4765-ae92-b3f0d287423d"},{"id":"r79feb0967b4f4445a579118c421c2cf3","name":"Pantalon multi-poche LMA Minerai","fullTitle":"Pantalon multi-poche LMA Minerai 40€","price":40,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r79feb0967b4f4445a579118c421c2cf3","qtyQid":"r5107dbd27e1043c1877d0aca5c645d95","customQid":"r6c46ba0798ba4e54b55c8e1575165d01","section":"obligatoire","role":"pantalon","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2e3a9669-7f99-4e36-9e45-353e400617a6"},{"id":"re9bbdbafbbd44cd29c9b57a1a78ede2a","name":"Pantalon multi-poches Snickers 6241","fullTitle":"Variante : Pantalon multi-poches Snickers 6241 80€","price":80,"sizes":["46","48","50","52","54","56","58","60","62","88","92","96","100","104","108","112","116","120","146","148","150","152","154","156","158"],"sizeQid":"re9bbdbafbbd44cd29c9b57a1a78ede2a","qtyQid":"r4560eab58c3141419e867ff315f83d84","customQid":"r99c58e39ff24406fa729dce066e20a25","section":"obligatoire","role":"pantalon","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/27f8f551-12cb-4956-8a80-09a12a5704be"},{"id":"r3e85311b75e24443860dbe323b6a6ee1","name":"Chaussures haute Lemaître Max","fullTitle":"Chaussures haute Lemaître Max","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r3e85311b75e24443860dbe323b6a6ee1","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":false,"isShoe":true,"defaultQty":1,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/38c94ad5-aadf-420c-9613-a03295c92105"},{"id":"r0a66b3124a784f72b9b28062de1b9260","name":"Chaussures haute PUMA Conquest","fullTitle":"Variante : Chaussures haute PUMA Conquest","price":0,"sizes":["40","41","42","43","44","45","46","47","48"],"sizeQid":"r0a66b3124a784f72b9b28062de1b9260","qtyQid":null,"customQid":null,"section":"obligatoire","role":"chaussures","isVariant":true,"isShoe":true,"defaultQty":1,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/a6b022ff-4a76-4544-90d5-e05caa15c38a"},{"id":"r65ddfa98538140c8aed1af8ae4c2ad07","name":"Veste imperméable softshell LMA Rock","fullTitle":"Veste imperméable softshell LMA Rock 60€","price":60,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r65ddfa98538140c8aed1af8ae4c2ad07","qtyQid":"r6017db325e08417087ee18759f5f296e","customQid":null,"section":"obligatoire","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/94d4d9a3-bf90-4a1a-aab6-56b023956560"},{"id":"r2737942f73f74ca8976dfaf185010ed2","name":"Veste imperméable 1104 Snickers","fullTitle":"Variante : Veste imperméable 1104 Snickers 120€","price":120,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2737942f73f74ca8976dfaf185010ed2","qtyQid":"r3183b98817cf468daed5b70d50f224b3","customQid":null,"section":"obligatoire","role":"veste","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/9fa8f9de-498b-4f3e-9618-715d5cf70cb9"},{"id":"rbcf3cf89a56b4610988f8a72c77dfc03","name":"T-shirt Chimsco B&C","fullTitle":"T-shirt Chimsco B&C 8€","price":8,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rbcf3cf89a56b4610988f8a72c77dfc03","qtyQid":"r1a4b9691d133443fab384610d569e6a8","customQid":null,"section":"obligatoire","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0},{"id":"rd4f7c3d8bafa42ae8dbf19ba7383637a","name":"Veste bi matière LMA soft","fullTitle":"Veste bi matière LMA soft 75€","price":75,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rd4f7c3d8bafa42ae8dbf19ba7383637a","qtyQid":"r1bceff8e47734235b7e24a1782e972d6","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/24451a84-a0fc-404f-ae1a-230507ccc044"},{"id":"r2d37848f6cc5484ca34649d27cc63bb0","name":"Veste légère 1304 Snickers","fullTitle":"Veste légère 1304 Snickers 110€","price":110,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r2d37848f6cc5484ca34649d27cc63bb0","qtyQid":"r0144d1a1e84a40bcb6631ae6f3d181de","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/f0fa32ec-d53b-4490-b704-f560e168905b"},{"id":"rff8b5a0150184cc38a04035ad071efa1","name":"Pull polaire zippé LMA Théorème","fullTitle":"Pull polaire zippé LMA Théorème 50€","price":50,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rff8b5a0150184cc38a04035ad071efa1","qtyQid":"ra190511145d04c1d87e4e663ca8f2e0f","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/d3157a30-4a5c-4402-bdfd-23f27ea7591f"},{"id":"ra686a5668ee844e2b9a260f004c0b967","name":"Sweat col haut LMA Berlin","fullTitle":"Sweat col haut LMA Berlin 30€","price":30,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"ra686a5668ee844e2b9a260f004c0b967","qtyQid":"ra1ade541a00c45f691aa559d415f90a9","customQid":null,"section":"facultatif","role":"pull","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/2055d223-1254-49f6-8ea2-c57527d7b173"},{"id":"rf6859452f82f45eaab9db506255d3e6a","name":"Bodywarmer LMA Sable","fullTitle":"Bodywarmer LMA Sable 40€","price":40,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"rf6859452f82f45eaab9db506255d3e6a","qtyQid":"rced947a798494bf898d21d5124114a43","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/3020e04a-0c53-4c0f-a98b-340ade5a8f2d"},{"id":"r1b8a3886e6c3472b9a39f833ebdca8f1","name":"Bodywarmer LMA Rebel","fullTitle":"Bodywarmer LMA Rebel 70€","price":70,"sizes":["S","M","L","XL","XXL","XXXL"],"sizeQid":"r1b8a3886e6c3472b9a39f833ebdca8f1","qtyQid":"rc81a40a4ac84489fb76647f79405aeb4","customQid":null,"section":"facultatif","role":"veste","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1ba853bd-a449-4726-9d44-4f71cd410ca0"},{"id":"r93fbf021627043a58bbe77bdd6e86335","name":"Bermuda LMA Sediment","fullTitle":"Bermuda LMA Sediment 35€","price":35,"sizes":["38","40","42","44","46","48","50","52","54"],"sizeQid":"r93fbf021627043a58bbe77bdd6e86335","qtyQid":"rc9f956db3e464fc99d84b9ae732a5428","customQid":"r867896ddb1a94f5d9bdc525fea61e9ae","section":"facultatif","role":"bermuda","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/0f99efe9-01bb-47f0-a6db-d9921e20008a"},{"id":"ra831a01d1c3840078c1b8e6ad22fc82e","name":"Bermuda multi-poches Snickers 6141","fullTitle":"Variante : Bermuda multi-poches Snickers 6141 65€","price":65,"sizes":["44","46","48","50","52","54","56","58","60","62"],"sizeQid":"ra831a01d1c3840078c1b8e6ad22fc82e","qtyQid":"re03cedd280e9439aacd8fb94b67429cc","customQid":"rebd23b929b664fbe834b9101e2bf70ad","section":"facultatif","role":"bermuda","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/1dca3ea9-22bd-4569-96a5-f4db62eea754"},{"id":"ra2d6762ea9b54c82a164c5a8b464c0e5","name":"T-shirt manches longues B&C","fullTitle":"T-shirt manches longues B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"ra2d6762ea9b54c82a164c5a8b464c0e5","qtyQid":"ra4190190a09e42c1b0e3928047f59ebc","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/00311b51-b979-4e96-a6d1-dccf4cf4a8bc"},{"id":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","name":"T-shirt marcel B&C","fullTitle":"T-shirt marcel B&C 8€","price":8,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r1aedd5184a3c4c80a4c1866b4a9f8aa4","qtyQid":"rf1ff6dd45ed046bc9d45dab5c396e205","customQid":null,"section":"facultatif","role":"tshirt","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/4732cb76-5111-4361-bf0c-d801c5812f05"},{"id":"r33fd5a4b9266426e92e5a8f9cdfda992","name":"Sous-vêtements thermique en polaire LMA (haut et bas)","fullTitle":"Sous-vêtements thermique en polaire LMA (haut et bas) 25€","price":25,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r33fd5a4b9266426e92e5a8f9cdfda992","qtyQid":"r047129d4e45a4bc69178d58c14b1728e","customQid":null,"section":"facultatif","role":"thermique","isVariant":false,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/681e528f-7dba-47b8-9893-87bdd8072c4c"},{"id":"r29852916e361461fb1e3cc441a6b369f","name":"Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement)","fullTitle":"Variante : Sous-vêtements thermique en coolmax DeltaPlus Koldytop (haut uniquement) 20€","price":20,"sizes":["S","M","L","XL","XXL"],"sizeQid":"r29852916e361461fb1e3cc441a6b369f","qtyQid":"r98222acdef214a9586ff14d4d1d8a425","customQid":null,"section":"facultatif","role":"thermique","isVariant":true,"isShoe":false,"defaultQty":0,"imageUrl":"https://hive.forms.usercontent.microsoft/images/00c3e291-4f50-4f01-8051-37803228d0fd/a1a74d34-71ce-4984-9ca1-af0456bfd461/TF4KSDACABN0ZYBLWC032M57T3/c5caffb7-b33a-43af-a703-78799df482f8"}]};
@@ -863,9 +988,9 @@ function productCard(p) {
   const active = c.size && c.qty > 0;
   const priceLabel = p.isShoe ? "Fourni" : euro(p.price);
   const badges = [
-    p.isShoe ? `<span class="badge free">Hors budget</span>` : "",
+    p.isShoe ? `<span class="badge chimsco-badge">Fourni Chimsco</span>` : "",
     p.isVariant ? `<span class="badge var">Variante</span>` : "",
-    p.section === "obligatoire" && !p.isVariant ? `<span class="badge">Essentiel</span>` : ""
+    p.section === "obligatoire" && !p.isVariant && !p.isShoe ? `<span class="badge">Essentiel</span>` : ""
   ].join(" ");
 
   const sizes = p.sizes.map(s =>
@@ -876,10 +1001,10 @@ function productCard(p) {
   const qtyVal = p.isShoe ? (c.size ? 1 : 0) : (c.qty || 0);
 
   const photoHtml = p.imageUrl
-    ? `<div class="product-photo"><img src="${p.imageUrl}" alt="" loading="lazy" decoding="async"></div>`
+    ? `<button type="button" class="product-photo zoomable" data-act="photo" data-id="${p.id}" aria-label="Agrandir la photo de ${p.name}"><img src="${p.imageUrl}" alt="" loading="lazy" decoding="async"><span class="photo-zoom-hint" aria-hidden="true">+</span></button>`
     : `<div class="product-photo empty" aria-hidden="true">👕</div>`;
 
-  return `<article class="product ${active ? "active" : ""} ${p.isVariant ? "variant" : ""}" data-id="${p.id}">
+  return `<article class="product ${active ? "active" : ""} ${p.isVariant ? "variant" : ""} ${p.isShoe ? "chimsco" : ""}" data-id="${p.id}">
     <div class="product-layout">
       ${photoHtml}
       <div class="product-body">
@@ -946,6 +1071,23 @@ function setCustom(id, value) {
   save();
 }
 
+function openPhotoLightbox(src, caption) {
+  const box = document.getElementById("photoLightbox");
+  document.getElementById("photoLightboxImg").src = src;
+  document.getElementById("photoLightboxImg").alt = caption;
+  document.getElementById("photoLightboxCaption").textContent = caption;
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+  document.getElementById("photoLightboxClose").focus();
+}
+
+function closePhotoLightbox() {
+  const box = document.getElementById("photoLightbox");
+  box.hidden = true;
+  document.getElementById("photoLightboxImg").src = "";
+  document.body.style.overflow = "";
+}
+
 function validateForSubmit() {
   const errors = [];
   const warnings = [];
@@ -1008,8 +1150,8 @@ function renderReview() {
   const items = selectedItems();
   document.getElementById("reviewLines").innerHTML = items.map(i => {
     const size = i.custom ? `${i.size} · autre ${i.custom}` : i.size;
-    return `<div class="review-line">
-      <div><strong>${i.product.name}</strong><div class="meta">Taille ${size} · Qté ${i.qty}</div></div>
+    return `<div class="review-line ${i.product.isShoe ? "chimsco" : ""}">
+      <div><strong>${i.product.name}</strong><div class="meta">Taille ${size} · Qté ${i.qty}${i.product.isShoe ? " · Fourni Chimsco" : ""}</div></div>
       <div><strong>${i.product.isShoe ? "Fourni" : euro(i.line)}</strong></div>
     </div>`;
   }).join("") || `<div class="alert info">Aucun article sélectionné.</div>`;
@@ -1173,11 +1315,22 @@ document.getElementById("filters").addEventListener("click", e => {
 });
 
 document.getElementById("catalog").addEventListener("click", e => {
+  const photo = e.target.closest("[data-act=photo]");
+  if (photo) {
+    const p = byId[photo.dataset.id];
+    if (p?.imageUrl) openPhotoLightbox(p.imageUrl, p.name);
+    return;
+  }
   const btn = e.target.closest("[data-act]");
   if (!btn) return;
   const { act, id, size, delta } = btn.dataset;
   if (act === "size") setSize(id, size);
   if (act === "qty") setQty(id, +delta);
+});
+document.getElementById("photoLightboxClose").addEventListener("click", closePhotoLightbox);
+document.getElementById("photoLightboxBackdrop").addEventListener("click", closePhotoLightbox);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !document.getElementById("photoLightbox").hidden) closePhotoLightbox();
 });
 document.getElementById("catalog").addEventListener("input", e => {
   const el = e.target.closest("[data-act=custom]");
