@@ -269,7 +269,7 @@ function renderAll() {
       const when = o.createdAt ? new Date(o.createdAt).toLocaleString("fr-BE") : "—";
       const items = (o.items || []).map(i => `
         <div class="item-line">
-          <div><strong>${esc(i.name)}</strong><div class="sub">Taille ${esc(i.size)}${i.custom ? " · " + esc(i.custom) : ""} · Qté ${i.qty}${i.comment ? "<br>Commentaire : " + esc(i.comment) : ""}</div></div>
+          <div><strong>${esc(i.name)}</strong><div class="sub">${i.gender ? esc(i.gender) + " · " : ""}Taille ${esc(i.size)}${i.custom ? " · " + esc(i.custom) : ""} · Qté ${i.qty}${i.comment ? "<br>Commentaire : " + esc(i.comment) : ""}</div></div>
           <div>${i.price === 0 ? "Fourni" : euro((i.price || 0) * (i.qty || 0))}</div>
         </div>`).join("");
       return `<article class="order" data-id="${esc(o.id)}">
@@ -295,8 +295,8 @@ function renderAll() {
   for (const o of orders) {
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
-      const key = `${i.name}||${size}`;
-      const cur = map.get(key) || { name: i.name, size, qty: 0, price: i.price || 0 };
+      const key = `${i.name}||${i.gender || ""}||${size}`;
+      const cur = map.get(key) || { name: i.name, size: (i.gender ? i.gender + " / " : "") + size, qty: 0, price: i.price || 0 };
       cur.qty += Number(i.qty) || 0;
       map.set(key, cur);
     }
@@ -329,14 +329,14 @@ function download(filename, text) {
 }
 
 function exportOrdersCsv() {
-  const lines = [["Date", "Nom", "Prénom", "Statut", "Budget", "Article", "Taille", "Quantité", "Prix unitaire", "Ligne", "Total commande", "Commentaire"].join(";")];
+  const lines = [["Date", "Nom", "Prénom", "Statut", "Budget", "Article", "Modèle", "Taille", "Quantité", "Prix unitaire", "Ligne", "Total commande", "Commentaire"].join(";")];
   for (const o of orders) {
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString("fr-BE") : "";
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
       lines.push([
         date, o.nom || "", o.prenom || "", o.statutLabel || o.statut || "", o.budget || "",
-        i.name || "", size,
+        i.name || "", i.gender || "", size,
         i.qty || 0, i.price || 0, (i.price || 0) * (i.qty || 0), o.total || 0,
         i.comment || ""
       ].map(csvCell).join(";"));
@@ -350,8 +350,8 @@ function exportConsoCsv() {
   for (const o of orders) {
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
-      const key = `${i.name}||${size}`;
-      const cur = map.get(key) || { name: i.name, size, qty: 0, price: i.price || 0 };
+      const key = `${i.name}||${i.gender || ""}||${size}`;
+      const cur = map.get(key) || { name: i.name, size: (i.gender ? i.gender + " / " : "") + size, qty: 0, price: i.price || 0 };
       cur.qty += Number(i.qty) || 0;
       map.set(key, cur);
     }
@@ -388,7 +388,8 @@ function buildMailRecap() {
     lines.push(`${(o.prenom || "")} ${(o.nom || "").toUpperCase()} — ${o.statutLabel || o.statut || "?"} — ${euro(o.total || 0)} / ${euro(o.budget || 0)}`);
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
-      lines.push(`  • ${i.name} | taille ${size} | qté ${i.qty}`);
+      const model = i.gender ? `${i.gender} | ` : "";
+      lines.push(`  • ${i.name} | ${model}taille ${size} | qté ${i.qty}`);
       if (i.comment && String(i.comment).trim()) {
         lines.push(`    Commentaire : ${String(i.comment).trim()}`);
       }
