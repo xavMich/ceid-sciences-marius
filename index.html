@@ -229,6 +229,43 @@ img { max-width: 100%; display: block; }
 .agree input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--teal); }
 .agree span { font-weight: 600; }
 
+.statut-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.statut-opt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  transition: .15s ease;
+  text-align: left;
+}
+.statut-opt:hover { border-color: #8eb8bb; }
+.statut-opt.on {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+}
+.statut-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.statut-opt strong {
+  font-size: 1rem;
+  color: var(--ink);
+}
+.statut-opt span {
+  font-size: .88rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+@media (max-width: 520px) {
+  .statut-grid { grid-template-columns: 1fr; }
+}
+
 .btn-row { display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
 .btn {
   min-height: var(--touch);
@@ -807,7 +844,7 @@ img { max-width: 100%; display: block; }
     <h1>Commande vêtements 2026</h1>
     <p>Choisissez vos articles, vos tailles et votre quantité. Le total se calcule tout seul.</p>
     <a class="hero-cta" href="#start" id="startCta">Commencer la commande →</a>
-    <div class="hero-meta">Chimsco · Budget 250 € · Chaussures fournies par l’entreprise</div>
+    <div class="hero-meta">Chimsco · Budget ouvrier 250 € · employé 110 € · Chaussures fournies par l’entreprise</div>
     <p style="margin-top:18px;font-size:.85rem;opacity:.75;animation:rise .7s .38s ease both">
       <a href="admin.html" style="color:#f4fffe;font-weight:700">Accès responsable des achats</a>
     </p>
@@ -823,7 +860,7 @@ img { max-width: 100%; display: block; }
   <section class="panel active" id="step1" aria-labelledby="start">
     <div class="block" id="start">
       <h2>Qui commande ?</h2>
-      <p class="lead">Indiquez votre nom, puis validez les règles de l’entreprise.</p>
+      <p class="lead">Indiquez votre nom, votre statut, puis validez les règles de l’entreprise.</p>
       <div class="field">
         <label for="nom">Nom</label>
         <input id="nom" type="text" autocomplete="family-name" required placeholder="Votre nom">
@@ -831,6 +868,22 @@ img { max-width: 100%; display: block; }
       <div class="field">
         <label for="prenom">Prénom</label>
         <input id="prenom" type="text" autocomplete="given-name" required placeholder="Votre prénom">
+      </div>
+
+      <div class="field" style="margin-bottom:8px">
+        <label id="statutLabel">Statut</label>
+      </div>
+      <div class="statut-grid" role="radiogroup" aria-labelledby="statutLabel">
+        <label class="statut-opt" id="statutOuvrier">
+          <input type="radio" name="statut" value="ouvrier">
+          <strong>Ouvrier</strong>
+          <span>Budget 250 €</span>
+        </label>
+        <label class="statut-opt" id="statutEmploye">
+          <input type="radio" name="statut" value="employe">
+          <strong>Employé de bureau</strong>
+          <span>Budget 110 €</span>
+        </label>
       </div>
 
       <div class="rules">
@@ -860,7 +913,7 @@ img { max-width: 100%; display: block; }
     <div class="budget-bar" id="budgetBar">
       <div class="budget-top">
         <strong id="totalLabel">0 €</strong>
-        <span>sur 250 €</span>
+        <span id="budgetCap">sur 250 €</span>
       </div>
       <div class="meter" id="meter"><i id="meterFill"></i></div>
       <div class="budget-note" id="budgetNote">Les chaussures ne comptent pas dans le budget.</div>
@@ -889,7 +942,7 @@ img { max-width: 100%; display: block; }
     <div class="block" id="reviewBlock">
       <h2>Vérifiez votre commande</h2>
       <p class="lead" id="reviewIdentity"></p>
-      <p class="review-hint">Ajustez les quantités ou retirez un article (×) directement ici — utile si vous dépassez 250 €.</p>
+      <p class="review-hint" id="reviewHint">Ajustez les quantités ou retirez un article (×) directement ici — utile si vous dépassez le budget.</p>
       <div id="reviewAlerts"></div>
       <div id="reviewLines"></div>
       <div class="review-total"><span>Total</span><span id="reviewTotal">0 €</span></div>
@@ -937,10 +990,14 @@ const FORMS_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=" + CATAL
 const ORDER_EMAIL = (window.ChimscoStore && ChimscoStore.STORE.achatsEmail) || "xavier@chimsco.be";
 const STORAGE_KEY = "chimsco-commande-vetements-2026";
 
+const BUDGETS = { ouvrier: 250, employe: 110 };
+const STATUT_LABELS = { ouvrier: "Ouvrier", employe: "Employé de bureau" };
+
 const state = {
   step: 1,
   nom: "",
   prenom: "",
+  statut: "", // "ouvrier" | "employe"
   agree: false,
   filter: "all",
   cart: {}, // id -> {size, qty, custom, comment}
@@ -952,6 +1009,14 @@ const byId = Object.fromEntries(CATALOG.products.map(p => [p.id, p]));
 
 function euro(n) {
   return new Intl.NumberFormat("fr-BE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+}
+
+function currentBudget() {
+  return BUDGETS[state.statut] || BUDGETS.ouvrier;
+}
+
+function statutLabel() {
+  return STATUT_LABELS[state.statut] || "";
 }
 
 function load() {
@@ -967,6 +1032,7 @@ function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({
     nom: state.nom,
     prenom: state.prenom,
+    statut: state.statut,
     agree: state.agree,
     cart: state.cart,
     startDate: state.startDate
@@ -1000,9 +1066,15 @@ function packStatus() {
 }
 
 function updateIdentityGate() {
-  const ok = state.nom.trim() && state.prenom.trim() && state.agree;
+  const ok = state.nom.trim() && state.prenom.trim() && state.statut && state.agree;
   document.getElementById("toStep2").disabled = !ok;
   document.getElementById("agreeBox").classList.toggle("on", state.agree);
+  document.getElementById("statutOuvrier").classList.toggle("on", state.statut === "ouvrier");
+  document.getElementById("statutEmploye").classList.toggle("on", state.statut === "employe");
+  const ouvrierRadio = document.querySelector('input[name="statut"][value="ouvrier"]');
+  const employeRadio = document.querySelector('input[name="statut"][value="employe"]');
+  if (ouvrierRadio) ouvrierRadio.checked = state.statut === "ouvrier";
+  if (employeRadio) employeRadio.checked = state.statut === "employe";
 }
 
 function setStep(n) {
@@ -1023,20 +1095,22 @@ function setStep(n) {
 
 function updateBudget() {
   const t = total();
-  const pct = Math.min(100, (t / CATALOG.budget) * 100);
+  const budget = currentBudget();
+  const pct = Math.min(100, (t / budget) * 100);
   document.getElementById("totalLabel").textContent = euro(t);
+  document.getElementById("budgetCap").textContent = "sur " + euro(budget);
   document.getElementById("meterFill").style.width = pct + "%";
   const meter = document.getElementById("meter");
   const note = document.getElementById("budgetNote");
-  meter.classList.toggle("over", t > CATALOG.budget);
-  if (t > CATALOG.budget) {
-    note.textContent = "Budget dépassé de " + euro(t - CATALOG.budget) + " — retirez des articles.";
+  meter.classList.toggle("over", t > budget);
+  if (t > budget) {
+    note.textContent = "Budget dépassé de " + euro(t - budget) + " — retirez des articles.";
     note.className = "budget-note warn";
   } else if (t === 0) {
     note.textContent = "Les chaussures ne comptent pas dans le budget.";
     note.className = "budget-note";
   } else {
-    note.textContent = "Il reste " + euro(CATALOG.budget - t) + ".";
+    note.textContent = "Il reste " + euro(budget - t) + ".";
     note.className = "budget-note ok";
   }
 
@@ -1220,7 +1294,8 @@ function validateForSubmit() {
   if (!pack.pantalon) warnings.push("Aucun pantalon dans la commande (ok si vous en avez déjà).");
   if (!pack.pull) warnings.push("Aucun pull / sweat dans la commande (ok si vous en avez déjà).");
   if (!pack.veste) warnings.push("Aucune veste dans la commande (ok si vous en avez déjà).");
-  if (total() > CATALOG.budget) errors.push("Le total dépasse 250 €.");
+  if (total() > currentBudget()) errors.push("Le total dépasse " + euro(currentBudget()) + ".");
+  if (!state.statut) errors.push("Choisissez votre statut (ouvrier ou employé).");
   if (!selectedItems().length) errors.push("Votre panier est vide.");
   for (const [id, c] of Object.entries(state.cart)) {
     if ((c.qty && !c.size) || (c.size && !c.qty)) {
@@ -1237,6 +1312,7 @@ function buildSummary() {
     "================================",
     `Nom : ${state.nom.trim().toUpperCase()}`,
     `Prénom : ${state.prenom.trim()}`,
+    `Statut : ${statutLabel()}`,
     "",
     "Articles :"
   ];
@@ -1249,7 +1325,7 @@ function buildSummary() {
     }
   }
   lines.push("");
-  lines.push(`TOTAL : ${euro(total())} / ${euro(CATALOG.budget)}`);
+  lines.push(`TOTAL : ${euro(total())} / ${euro(currentBudget())}`);
   lines.push("");
   lines.push("Accord règles : oui");
   lines.push(`Date : ${new Date().toLocaleString("fr-BE")}`);
@@ -1260,7 +1336,9 @@ function renderReview() {
   document.getElementById("reviewBlock").hidden = false;
   document.getElementById("successBlock").hidden = true;
   document.getElementById("reviewIdentity").textContent =
-    `${state.prenom.trim()} ${state.nom.trim().toUpperCase()} · budget ${euro(CATALOG.budget)}`;
+    `${state.prenom.trim()} ${state.nom.trim().toUpperCase()} · ${statutLabel()} · budget ${euro(currentBudget())}`;
+  document.getElementById("reviewHint").textContent =
+    `Ajustez les quantités ou retirez un article (×) directement ici — utile si vous dépassez ${euro(currentBudget())}.`;
 
   const { errors, warnings } = validateForSubmit();
   const alerts = document.getElementById("reviewAlerts");
@@ -1360,8 +1438,10 @@ function buildOrderPayload() {
     id: crypto.randomUUID(),
     nom: state.nom.trim(),
     prenom: state.prenom.trim(),
+    statut: state.statut,
+    statutLabel: statutLabel(),
     total: total(),
-    budget: CATALOG.budget,
+    budget: currentBudget(),
     items,
     summary: buildSummary(),
     createdAt: new Date().toISOString(),
@@ -1444,6 +1524,15 @@ async function submitOrder() {
 document.getElementById("nom").addEventListener("input", e => { state.nom = e.target.value; updateIdentityGate(); save(); });
 document.getElementById("prenom").addEventListener("input", e => { state.prenom = e.target.value; updateIdentityGate(); save(); });
 document.getElementById("agree").addEventListener("change", e => { state.agree = e.target.checked; updateIdentityGate(); save(); });
+document.querySelectorAll('input[name="statut"]').forEach(radio => {
+  radio.addEventListener("change", e => {
+    if (!e.target.checked) return;
+    state.statut = e.target.value;
+    updateIdentityGate();
+    updateBudget();
+    save();
+  });
+});
 document.getElementById("toStep2").addEventListener("click", () => setStep(2));
 document.getElementById("startCta").addEventListener("click", e => {
   e.preventDefault();
@@ -1506,6 +1595,7 @@ load();
 document.getElementById("nom").value = state.nom || "";
 document.getElementById("prenom").value = state.prenom || "";
 document.getElementById("agree").checked = !!state.agree;
+if (state.statut !== "ouvrier" && state.statut !== "employe") state.statut = "";
 updateIdentityGate();
 renderCatalog();
 updateBudget();

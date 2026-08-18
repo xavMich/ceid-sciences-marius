@@ -276,7 +276,7 @@ function renderAll() {
         <div class="order-head">
           <div>
             <h3>${esc(o.prenom || "")} ${esc((o.nom || "").toUpperCase())}</h3>
-            <div class="meta">${esc(when)}</div>
+            <div class="meta">${esc(when)}${(o.statutLabel || o.statut) ? " · " + esc(o.statutLabel || o.statut) : ""}${o.budget ? " · budget " + euro(o.budget) : ""}</div>
           </div>
           <div style="text-align:right">
             <span class="badge">${euro(o.total || 0)}</span>
@@ -329,13 +329,14 @@ function download(filename, text) {
 }
 
 function exportOrdersCsv() {
-  const lines = [["Date", "Nom", "Prénom", "Article", "Taille", "Quantité", "Prix unitaire", "Ligne", "Total commande", "Commentaire"].join(";")];
+  const lines = [["Date", "Nom", "Prénom", "Statut", "Budget", "Article", "Taille", "Quantité", "Prix unitaire", "Ligne", "Total commande", "Commentaire"].join(";")];
   for (const o of orders) {
     const date = o.createdAt ? new Date(o.createdAt).toLocaleString("fr-BE") : "";
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
       lines.push([
-        date, o.nom || "", o.prenom || "", i.name || "", size,
+        date, o.nom || "", o.prenom || "", o.statutLabel || o.statut || "", o.budget || "",
+        i.name || "", size,
         i.qty || 0, i.price || 0, (i.price || 0) * (i.qty || 0), o.total || 0,
         i.comment || ""
       ].map(csvCell).join(";"));
@@ -384,7 +385,7 @@ function buildMailRecap() {
     "-------------------"
   ];
   for (const o of orders) {
-    lines.push(`${(o.prenom || "")} ${(o.nom || "").toUpperCase()} — ${euro(o.total || 0)}`);
+    lines.push(`${(o.prenom || "")} ${(o.nom || "").toUpperCase()} — ${o.statutLabel || o.statut || "?"} — ${euro(o.total || 0)} / ${euro(o.budget || 0)}`);
     for (const i of (o.items || [])) {
       const size = i.custom ? `${i.size} (${i.custom})` : i.size;
       lines.push(`  • ${i.name} | taille ${size} | qté ${i.qty}`);

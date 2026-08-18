@@ -2,6 +2,10 @@
   "formId": "keLDAFBPAU-AUTeAMijQ_TRNp6HOcYRJnKGvBFa_1GFURjRLU0RBQ0FCTjBaWUJMV0MwMzJNNTdUMy4u",
   "title": "Commande vêtements - 2026",
   "budget": 250,
+  "budgets": {
+    "ouvrier": 250,
+    "employe": 110
+  },
   "tenantId": "00c3e291-4f50-4f01-8051-37803228d0fd",
   "ownerId": "a1a74d34-71ce-4984-9ca1-af0456bfd461",
   "agreementQid": "r74561d39c5f44a389ec1505ff7e0186a",
